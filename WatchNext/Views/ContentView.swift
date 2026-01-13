@@ -97,21 +97,51 @@ struct SearchResultsView: View {
         VStack(spacing: 0) {
             // Top filters bar
             VStack(spacing: 12) {
-                // Platform and Region row
-                HStack(spacing: 16) {
-                    Picker("Platform", selection: $selectedPlatform) {
-                        ForEach(Constants.TMDB.StreamingPlatform.allPlatforms) { platform in
-                            Text(platform.name).tag(platform.id)
+                // Search field
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(.secondary)
+                    TextField("Search movies, actors, directors...", text: $viewModel.searchQuery)
+                        .textFieldStyle(.plain)
+                        .onSubmit {
+                            Task {
+                                await viewModel.search()
+                            }
                         }
+                    if !viewModel.searchQuery.isEmpty {
+                        Button {
+                            viewModel.searchQuery = ""
+                            Task {
+                                await viewModel.search()
+                            }
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .labelsHidden()
+                }
+                .padding(8)
+                .background(.quaternary)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                    Picker("Region", selection: $selectedRegion) {
-                        ForEach(Constants.TMDB.Region.availableRegions, id: \.code) { region in
-                            Text(region.name).tag(region.code)
+                // Platform and Region row (hidden in search mode)
+                if !viewModel.isSearchMode {
+                    HStack(spacing: 16) {
+                        Picker("Platform", selection: $selectedPlatform) {
+                            ForEach(Constants.TMDB.StreamingPlatform.allPlatforms) { platform in
+                                Text(platform.name).tag(platform.id)
+                            }
                         }
+                        .labelsHidden()
+
+                        Picker("Region", selection: $selectedRegion) {
+                            ForEach(Constants.TMDB.Region.availableRegions, id: \.code) { region in
+                                Text(region.name).tag(region.code)
+                            }
+                        }
+                        .labelsHidden()
                     }
-                    .labelsHidden()
                 }
 
                 // Content type
@@ -127,33 +157,35 @@ struct SearchResultsView: View {
                     }
                 }
 
-                // Filters row
-                HStack(spacing: 12) {
-                    Picker("Genre", selection: $viewModel.selectedGenre) {
-                        Text("All Genres").tag(nil as Genre?)
-                        ForEach(viewModel.currentGenres) { genre in
-                            Text(genre.name).tag(genre as Genre?)
+                // Filters row (hidden in search mode)
+                if !viewModel.isSearchMode {
+                    HStack(spacing: 12) {
+                        Picker("Genre", selection: $viewModel.selectedGenre) {
+                            Text("All Genres").tag(nil as Genre?)
+                            ForEach(viewModel.currentGenres) { genre in
+                                Text(genre.name).tag(genre as Genre?)
+                            }
                         }
-                    }
-                    .labelsHidden()
-                    .onChange(of: viewModel.selectedGenre) {
-                        Task {
-                            await viewModel.search()
-                        }
-                    }
-
-                    Picker("Sort", selection: $viewModel.selectedSortOption) {
-                        ForEach(SortOption.allCases) { option in
-                            Text(option.displayName).tag(option)
-                        }
-                    }
-                    .labelsHidden()
-                    .onChange(of: viewModel.selectedSortOption) {
-                        if viewModel.selectedSortOption.isLocalSort {
-                            viewModel.sortLocally()
-                        } else {
+                        .labelsHidden()
+                        .onChange(of: viewModel.selectedGenre) {
                             Task {
                                 await viewModel.search()
+                            }
+                        }
+
+                        Picker("Sort", selection: $viewModel.selectedSortOption) {
+                            ForEach(SortOption.allCases) { option in
+                                Text(option.displayName).tag(option)
+                            }
+                        }
+                        .labelsHidden()
+                        .onChange(of: viewModel.selectedSortOption) {
+                            if viewModel.selectedSortOption.isLocalSort {
+                                viewModel.sortLocally()
+                            } else {
+                                Task {
+                                    await viewModel.search()
+                                }
                             }
                         }
                     }

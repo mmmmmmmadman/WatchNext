@@ -249,6 +249,40 @@ actor TMDBService {
         let watchProviders = try JSONDecoder().decode(WatchProvidersResponse.self, from: data)
         return watchProviders.results[region]?.link
     }
+
+    func searchMovies(query: String, page: Int = 1) async throws -> DiscoverResponse<Movie> {
+        var components = URLComponents(string: "\(baseURL)/search/movie")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "include_adult", value: "false"),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(DiscoverResponse<Movie>.self, from: data)
+    }
+
+    func searchTVShows(query: String, page: Int = 1) async throws -> DiscoverResponse<TVShow> {
+        var components = URLComponents(string: "\(baseURL)/search/tv")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "include_adult", value: "false"),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(DiscoverResponse<TVShow>.self, from: data)
+    }
 }
 
 enum TMDBError: Error, LocalizedError {
