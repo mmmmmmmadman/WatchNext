@@ -1,4 +1,4 @@
-# Apple TV 全域內容檢索與評分系統
+# WatchNext
 
 ## 開發規範
 
@@ -9,25 +9,32 @@
 
 ## 專案概述
 
-可上架 App Store 的 iOS/macOS 原生應用程式，解決 Apple TV 分類顯示不完整的問題。透過整合 TMDB 與 OMDb API，提供全量索引能力的檢索介面。
+macOS 原生應用程式，搜尋多個串流平台的電影和電視節目。透過整合 TMDB 與 OMDb API，提供跨平台的內容檢索介面。
 
 ## 技術堆疊
 
 - 語言：Swift
-- 框架：SwiftUI（多平台）
+- 框架：SwiftUI
 - 資料庫：SwiftData
-- 最低版本：iOS 17.0 / macOS 14.0
+- 最低版本：macOS 14.0
+
+## 支援平台
+
+- Apple TV / Apple TV+
+- Netflix
+- Prime Video
+- Disney+
 
 ## 核心功能
 
-1. 串接 TMDB API 的 Watch Providers 接口，檢索所有 Apple TV 平台內容
+1. 串接 TMDB API 的 Watch Providers 接口，檢索各串流平台內容
 2. 整合 OMDb API 獲取 IMDb 與 Rotten Tomatoes 評分
-3. 多維度排序：英文名稱、年份、評分
-4. Genre ID 過濾，確保類別完整性
-5. 本地資料快取，支援離線瀏覽
+3. 多維度排序：TMDB、IMDb、RT 評分
+4. Genre 過濾
+5. 區域選擇
 
 ## API 金鑰配置
 
 需要以下 API 金鑰：
 - TMDB_API_KEY（從 themoviedb.org 申請）
-- OMDB_API_KEY（從 omdbapi.com 申請）
+- OMDB_API_KEY（從 omdbapi.com 申請，選用）

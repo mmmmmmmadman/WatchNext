@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct AppleTVSearchApp: App {
+struct WatchNextApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             CachedMovie.self,
