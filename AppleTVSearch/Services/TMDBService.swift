@@ -1,0 +1,269 @@
+import Foundation
+
+actor TMDBService {
+    private let baseURL = Constants.TMDB.baseURL
+
+    private var apiKey: String {
+        APIConfig.tmdbApiKey
+    }
+
+    struct DiscoverResponse<T: Codable>: Codable {
+        let page: Int
+        let results: [T]
+        let totalPages: Int
+        let totalResults: Int
+
+        enum CodingKeys: String, CodingKey {
+            case page, results
+            case totalPages = "total_pages"
+            case totalResults = "total_results"
+        }
+    }
+
+    struct MovieDetailsResponse: Codable {
+        let id: Int
+        let imdbId: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case imdbId = "imdb_id"
+        }
+    }
+
+    struct TVExternalIdsResponse: Codable {
+        let id: Int
+        let imdbId: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case imdbId = "imdb_id"
+        }
+    }
+
+    struct WatchProvidersResponse: Codable {
+        let id: Int
+        let results: [String: WatchProviderRegion]
+    }
+
+    struct WatchProviderRegion: Codable {
+        let link: String?
+        let flatrate: [WatchProviderInfo]?
+        let buy: [WatchProviderInfo]?
+        let rent: [WatchProviderInfo]?
+    }
+
+    struct WatchProviderInfo: Codable {
+        let providerId: Int
+        let providerName: String
+
+        enum CodingKeys: String, CodingKey {
+            case providerId = "provider_id"
+            case providerName = "provider_name"
+        }
+    }
+
+    func discoverMovies(
+        page: Int = 1,
+        genreId: Int? = nil,
+        sortBy: SortOption = .popularityDesc,
+        minYear: Int? = nil,
+        maxYear: Int? = nil,
+        minRating: Double? = nil,
+        region: String = APIConfig.selectedRegion,
+        platform: Constants.TMDB.StreamingPlatform = APIConfig.selectedPlatform
+    ) async throws -> DiscoverResponse<Movie> {
+        let providerString = platform.providerIds.map { String($0) }.joined(separator: "|")
+        var components = URLComponents(string: "\(baseURL)/discover/movie")!
+        var queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "watch_region", value: region),
+            URLQueryItem(name: "with_watch_providers", value: providerString),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "sort_by", value: sortBy.apiSortValue),
+            URLQueryItem(name: "include_adult", value: "false"),
+        ]
+
+        if let genreId = genreId {
+            queryItems.append(URLQueryItem(name: "with_genres", value: String(genreId)))
+        }
+
+        if let minYear = minYear {
+            queryItems.append(URLQueryItem(name: "primary_release_date.gte", value: "\(minYear)-01-01"))
+        }
+
+        if let maxYear = maxYear {
+            queryItems.append(URLQueryItem(name: "primary_release_date.lte", value: "\(maxYear)-12-31"))
+        }
+
+        if let minRating = minRating {
+            queryItems.append(URLQueryItem(name: "vote_average.gte", value: String(minRating)))
+            queryItems.append(URLQueryItem(name: "vote_count.gte", value: "50"))
+        }
+
+        components.queryItems = queryItems
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(DiscoverResponse<Movie>.self, from: data)
+    }
+
+    func discoverTVShows(
+        page: Int = 1,
+        genreId: Int? = nil,
+        sortBy: SortOption = .popularityDesc,
+        minYear: Int? = nil,
+        maxYear: Int? = nil,
+        minRating: Double? = nil,
+        region: String = APIConfig.selectedRegion,
+        platform: Constants.TMDB.StreamingPlatform = APIConfig.selectedPlatform
+    ) async throws -> DiscoverResponse<TVShow> {
+        let providerString = platform.providerIds.map { String($0) }.joined(separator: "|")
+        var components = URLComponents(string: "\(baseURL)/discover/tv")!
+        var queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "watch_region", value: region),
+            URLQueryItem(name: "with_watch_providers", value: providerString),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "sort_by", value: sortBy.apiSortValue.replacingOccurrences(of: "release_date", with: "first_air_date")),
+            URLQueryItem(name: "include_adult", value: "false"),
+        ]
+
+        if let genreId = genreId {
+            queryItems.append(URLQueryItem(name: "with_genres", value: String(genreId)))
+        }
+
+        if let minYear = minYear {
+            queryItems.append(URLQueryItem(name: "first_air_date.gte", value: "\(minYear)-01-01"))
+        }
+
+        if let maxYear = maxYear {
+            queryItems.append(URLQueryItem(name: "first_air_date.lte", value: "\(maxYear)-12-31"))
+        }
+
+        if let minRating = minRating {
+            queryItems.append(URLQueryItem(name: "vote_average.gte", value: String(minRating)))
+            queryItems.append(URLQueryItem(name: "vote_count.gte", value: "50"))
+        }
+
+        components.queryItems = queryItems
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(DiscoverResponse<TVShow>.self, from: data)
+    }
+
+    func getMovieGenres() async throws -> [Genre] {
+        var components = URLComponents(string: "\(baseURL)/genre/movie/list")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "language", value: "en-US"),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let genresResponse = try JSONDecoder().decode(GenresResponse.self, from: data)
+        return genresResponse.genres
+    }
+
+    func getTVGenres() async throws -> [Genre] {
+        var components = URLComponents(string: "\(baseURL)/genre/tv/list")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "language", value: "en-US"),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let genresResponse = try JSONDecoder().decode(GenresResponse.self, from: data)
+        return genresResponse.genres
+    }
+
+    func getMovieIMDbId(movieId: Int) async throws -> String? {
+        var components = URLComponents(string: "\(baseURL)/movie/\(movieId)")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let details = try JSONDecoder().decode(MovieDetailsResponse.self, from: data)
+        return details.imdbId
+    }
+
+    func getTVShowIMDbId(tvId: Int) async throws -> String? {
+        var components = URLComponents(string: "\(baseURL)/tv/\(tvId)/external_ids")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let externalIds = try JSONDecoder().decode(TVExternalIdsResponse.self, from: data)
+        return externalIds.imdbId
+    }
+
+    func getMovieWatchProviderLink(movieId: Int, region: String = APIConfig.selectedRegion) async throws -> String? {
+        var components = URLComponents(string: "\(baseURL)/movie/\(movieId)/watch/providers")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let watchProviders = try JSONDecoder().decode(WatchProvidersResponse.self, from: data)
+        return watchProviders.results[region]?.link
+    }
+
+    func getTVShowWatchProviderLink(tvId: Int, region: String = APIConfig.selectedRegion) async throws -> String? {
+        var components = URLComponents(string: "\(baseURL)/tv/\(tvId)/watch/providers")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let watchProviders = try JSONDecoder().decode(WatchProvidersResponse.self, from: data)
+        return watchProviders.results[region]?.link
+    }
+}
+
+enum TMDBError: Error, LocalizedError {
+    case invalidResponse
+    case apiKeyMissing
+    case networkError(Error)
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidResponse:
+            return "Invalid response from TMDB API"
+        case .apiKeyMissing:
+            return "TMDB API key is not configured"
+        case .networkError(let error):
+            return "Network error: \(error.localizedDescription)"
+        }
+    }
+}
