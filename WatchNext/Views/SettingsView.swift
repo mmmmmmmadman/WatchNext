@@ -89,15 +89,6 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Button("Save API Keys") {
-                        APIConfig.setTMDBApiKey(tmdbKey)
-                        APIConfig.setOMDbApiKey(omdbKey)
-                        dismiss()
-                    }
-                    .disabled(tmdbKey.isEmpty)
-                }
-
-                Section {
                     VStack(alignment: .center, spacing: 12) {
                         Link(destination: URL(string: "https://www.themoviedb.org")!) {
                             VStack(spacing: 8) {
@@ -131,8 +122,18 @@ struct SettingsView: View {
                         dismiss()
                     }
                 }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        APIConfig.setTMDBApiKey(tmdbKey)
+                        APIConfig.setOMDbApiKey(omdbKey)
+                        dismiss()
+                    }
+                    .disabled(tmdbKey.isEmpty)
+                }
             }
         }
+        .frame(minWidth: 500, minHeight: 450)
+        .padding(.horizontal, 20)
     }
 }
 
