@@ -12,7 +12,7 @@ settings:
     SWIFT_VERSION: "5.9"
     GENERATE_INFOPLIST_FILE: YES
     CURRENT_PROJECT_VERSION: 2
-    MARKETING_VERSION: 1.2.0
+    MARKETING_VERSION: 1.3.0
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: W89J6VDBML
 
@@ -41,7 +41,8 @@ targets:
           CODE_SIGN_IDENTITY: "-"
           CODE_SIGNING_REQUIRED: NO
         Release:
-          CODE_SIGN_IDENTITY: "Apple Distribution"
+          CODE_SIGN_IDENTITY: "-"
+          CODE_SIGNING_REQUIRED: NO
 
   WatchNext-iOS:
     type: application
