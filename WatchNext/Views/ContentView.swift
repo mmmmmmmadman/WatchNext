@@ -93,6 +93,14 @@ struct SearchResultsView: View {
     @Binding var selectedPlatform: String
     @Binding var selectedRegion: String
 
+    private var gridColumns: [GridItem] {
+        #if os(iOS)
+        [GridItem(.adaptive(minimum: 110, maximum: 180), spacing: 12)]
+        #else
+        [GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)]
+        #endif
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // Top filters bar
@@ -211,9 +219,7 @@ struct SearchResultsView: View {
                 Spacer()
             } else {
                 ScrollView {
-                    LazyVGrid(columns: [
-                        GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
-                    ], spacing: 16) {
+                    LazyVGrid(columns: gridColumns, spacing: 16) {
                         switch viewModel.selectedContentType {
                         case .movies:
                             ForEach(Array(viewModel.movies.enumerated()), id: \.element.id) { index, movie in

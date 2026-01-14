@@ -132,8 +132,10 @@ struct SettingsView: View {
                 }
             }
         }
+        #if os(macOS)
         .frame(minWidth: 500, minHeight: 450)
         .padding(.horizontal, 20)
+        #endif
     }
 }
 

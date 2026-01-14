@@ -3,6 +3,7 @@ options:
   bundleIdPrefix: com.madzine
   deploymentTarget:
     macOS: "14.0"
+    iOS: "17.0"
   xcodeVersion: "15.0"
   generateEmptyDirectories: true
 
@@ -31,6 +32,34 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: "WatchNext"
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.entertainment"
         ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_PREVIEWS: YES
+        DEVELOPMENT_TEAM: ""
+      configs:
+        Debug:
+          CODE_SIGN_IDENTITY: "-"
+          CODE_SIGNING_REQUIRED: NO
+        Release:
+          CODE_SIGN_IDENTITY: "-"
+          CODE_SIGNING_REQUIRED: NO
+
+  WatchNext-iOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: WatchNext
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.madzine.WatchNext
+        INFOPLIST_KEY_CFBundleDisplayName: "WatchNext"
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.entertainment"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ENABLE_PREVIEWS: YES
         DEVELOPMENT_TEAM: ""

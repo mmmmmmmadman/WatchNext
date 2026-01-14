@@ -29,7 +29,11 @@ struct MovieCardView: View {
                     EmptyView()
                 }
             }
+            #if os(iOS)
+            .frame(height: 165)
+            #else
             .frame(height: 225)
+            #endif
             .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
@@ -87,7 +91,11 @@ struct TVShowCardView: View {
                     EmptyView()
                 }
             }
+            #if os(iOS)
+            .frame(height: 165)
+            #else
             .frame(height: 225)
+            #endif
             .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
@@ -122,19 +130,19 @@ struct RatingPill: View {
     let color: Color
 
     var body: some View {
-        HStack(spacing: 2) {
+        VStack(spacing: 1) {
             Text(label)
-                .font(.caption2)
+                .font(.system(size: 8))
                 .foregroundStyle(.secondary)
             Text(value)
-                .font(.caption2)
-                .fontWeight(.semibold)
+                .font(.system(size: 10))
+                .fontWeight(.bold)
                 .foregroundStyle(color)
         }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 2)
+        .frame(width: 28)
+        .padding(.vertical, 3)
         .background(.quaternary)
-        .clipShape(Capsule())
+        .clipShape(RoundedRectangle(cornerRadius: 4))
     }
 }
 
