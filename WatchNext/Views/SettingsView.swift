@@ -93,15 +93,16 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    VStack(alignment: .center, spacing: 12) {
+                    VStack(alignment: .center, spacing: 16) {
+                        // TMDB Attribution
                         Link(destination: URL(string: "https://www.themoviedb.org")!) {
-                            VStack(spacing: 8) {
+                            VStack(spacing: 6) {
                                 Image(systemName: "film.stack")
-                                    .font(.system(size: 40))
+                                    .font(.system(size: 32))
                                     .foregroundStyle(.blue)
                                 Text("TMDB")
-                                    .font(.custom("Avenir-Light", size: 17))
-                                    .tracking(0.8)
+                                    .font(.custom("Avenir-Light", size: 14))
+                                    .tracking(0.5)
                                     .foregroundStyle(.primary)
                             }
                         }
@@ -115,6 +116,34 @@ struct SettingsView: View {
                     .padding(.vertical, 8)
                 } header: {
                     Text("Data Provider")
+                }
+
+                Section {
+                    VStack(alignment: .center, spacing: 12) {
+                        Text("WatchNext")
+                            .font(.custom("Avenir-Light", size: 18))
+                            .tracking(1.5)
+
+                        Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        HStack(spacing: 20) {
+                            Link(destination: URL(string: "https://github.com/mmmmmmmadman/WatchNext")!) {
+                                Label("GitHub", systemImage: "link")
+                                    .font(.caption)
+                            }
+
+                            Link(destination: URL(string: "https://github.com/mmmmmmmadman/WatchNext/blob/main/docs/privacy-policy.md")!) {
+                                Label("Privacy", systemImage: "hand.raised")
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                } header: {
+                    Text("About")
                 }
             }
             .navigationTitle("")
