@@ -44,17 +44,17 @@ struct MovieCardView: View {
 
                 if let year = movie.releaseYear {
                     Text(String(year))
-                        .font(.caption)
+                        .font(.cardYear(for: .current))
                         .foregroundStyle(.secondary)
                 }
 
                 HStack(spacing: 6) {
-                    RatingPill(label: "TMDB", value: String(format: "%.1f", movie.voteAverage), color: .blue)
+                    RatingPill(label: "TMDB", value: String(format: "%.1f", movie.voteAverage), color: .tmdbBlueFallback)
                     if let imdb = movie.imdbRating {
-                        RatingPill(label: "IMDb", value: String(format: "%.1f", imdb), color: .yellow)
+                        RatingPill(label: "IMDb", value: String(format: "%.1f", imdb), color: .imdbGoldFallback)
                     }
                     if let rt = movie.rottenTomatoesRating {
-                        RatingPill(label: "RT", value: "\(rt)", color: .red)
+                        RatingPill(label: "RT", value: "\(rt)", color: .rtRedFallback)
                     }
                 }
             }
@@ -106,17 +106,17 @@ struct TVShowCardView: View {
 
                 if let year = show.firstAirYear {
                     Text(String(year))
-                        .font(.caption)
+                        .font(.cardYear(for: .current))
                         .foregroundStyle(.secondary)
                 }
 
                 HStack(spacing: 6) {
-                    RatingPill(label: "TMDB", value: String(format: "%.1f", show.voteAverage), color: .blue)
+                    RatingPill(label: "TMDB", value: String(format: "%.1f", show.voteAverage), color: .tmdbBlueFallback)
                     if let imdb = show.imdbRating {
-                        RatingPill(label: "IMDb", value: String(format: "%.1f", imdb), color: .yellow)
+                        RatingPill(label: "IMDb", value: String(format: "%.1f", imdb), color: .imdbGoldFallback)
                     }
                     if let rt = show.rottenTomatoesRating {
-                        RatingPill(label: "RT", value: "\(rt)", color: .red)
+                        RatingPill(label: "RT", value: "\(rt)", color: .rtRedFallback)
                     }
                 }
             }
@@ -132,15 +132,19 @@ struct RatingPill: View {
     var body: some View {
         VStack(spacing: 1) {
             Text(label)
-                .font(.system(size: 8))
+                .font(.ratingLabel(for: .current))
                 .foregroundStyle(.secondary)
             Text(value)
-                .font(.system(size: 10))
-                .fontWeight(.bold)
+                .font(.ratingValue(for: .current))
                 .foregroundStyle(color)
         }
+        #if os(iOS)
+        .frame(width: 32)
+        .padding(.vertical, 4)
+        #else
         .frame(width: 28)
         .padding(.vertical, 3)
+        #endif
         .background(.quaternary)
         .clipShape(RoundedRectangle(cornerRadius: 4))
     }

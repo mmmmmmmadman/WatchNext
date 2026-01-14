@@ -17,23 +17,12 @@ struct ContentView: View {
                     SearchResultsView(
                         viewModel: viewModel,
                         selectedPlatform: $selectedPlatform,
-                        selectedRegion: $selectedRegion
+                        selectedRegion: $selectedRegion,
+                        showSettings: $showSettings
                     )
                 }
             }
-            .navigationTitle("WatchNext")
-            #if os(iOS)
-            .navigationBarTitleDisplayMode(.large)
-            #endif
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                    }
-                }
-            }
+            .modifier(CustomNavigationTitleModifier(showSettings: $showSettings))
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
@@ -44,13 +33,13 @@ struct ContentView: View {
             .onChange(of: selectedPlatform) {
                 APIConfig.setPlatform(selectedPlatform)
                 Task {
-                    await viewModel.search()
+                    await viewModel.discover()
                 }
             }
             .onChange(of: selectedRegion) {
                 APIConfig.setRegion(selectedRegion)
                 Task {
-                    await viewModel.search()
+                    await viewModel.discover()
                 }
             }
         }
@@ -67,10 +56,10 @@ struct SettingsPromptView: View {
                 .foregroundStyle(.secondary)
 
             Text("API Key Required")
-                .font(.title2)
-                .fontWeight(.semibold)
+                .font(.custom("Avenir-Light", size: 20))
+                .tracking(1)
 
-            Text("Configure your TMDB API key to start searching.")
+            Text("Configure your TMDB API key to start.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
@@ -79,7 +68,8 @@ struct SettingsPromptView: View {
                 showSettings = true
             } label: {
                 Text("Open Settings")
-                    .fontWeight(.medium)
+                    .font(.custom("Avenir-Light", size: 15))
+                    .tracking(0.5)
                     .frame(maxWidth: 200)
             }
             .buttonStyle(.borderedProminent)
@@ -92,6 +82,7 @@ struct SearchResultsView: View {
     @Bindable var viewModel: SearchViewModel
     @Binding var selectedPlatform: String
     @Binding var selectedRegion: String
+    @Binding var showSettings: Bool
 
     private var gridColumns: [GridItem] {
         #if os(iOS)
@@ -103,104 +94,228 @@ struct SearchResultsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top filters bar
-            VStack(spacing: 12) {
-                // Search field
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundStyle(.secondary)
-                    TextField("Search movies, actors, directors...", text: $viewModel.searchQuery)
-                        .textFieldStyle(.plain)
-                        .onSubmit {
-                            Task {
-                                await viewModel.search()
+            #if os(iOS)
+            // iOS: Two-row compact filter layout
+            VStack(spacing: 8) {
+                // Row 1: Platform, Region, Content Type
+                HStack(spacing: 12) {
+                    // Platform
+                    Menu {
+                        ForEach(Constants.TMDB.StreamingPlatform.allPlatforms) { platform in
+                            Button(platform.name) {
+                                selectedPlatform = platform.id
                             }
                         }
-                    if !viewModel.searchQuery.isEmpty {
-                        Button {
-                            viewModel.searchQuery = ""
-                            Task {
-                                await viewModel.search()
-                            }
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.secondary)
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(Constants.TMDB.StreamingPlatform.find(by: selectedPlatform)?.name ?? "Platform")
+                                .font(.subheadline)
+                            Image(systemName: "chevron.down")
+                                .font(.caption2)
                         }
-                        .buttonStyle(.plain)
+                        .foregroundStyle(.primary)
+                    }
+
+                    // Region
+                    Menu {
+                        ForEach(Constants.TMDB.Region.availableRegions, id: \.code) { region in
+                            Button(region.name) {
+                                selectedRegion = region.code
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(selectedRegion)
+                                .font(.subheadline)
+                            Image(systemName: "chevron.down")
+                                .font(.caption2)
+                        }
+                        .foregroundStyle(.primary)
+                    }
+
+                    Spacer()
+
+                    // Content type (segmented)
+                    Picker("", selection: $viewModel.selectedContentType) {
+                        ForEach(ContentType.allCases) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .frame(width: 140)
+                    .onChange(of: viewModel.selectedContentType) {
+                        Task {
+                            await viewModel.discover()
+                        }
                     }
                 }
-                .padding(8)
-                .background(.quaternary)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                // Platform and Region row (hidden in search mode)
-                if !viewModel.isSearchMode {
-                    HStack(spacing: 16) {
-                        Picker("Platform", selection: $selectedPlatform) {
-                            ForEach(Constants.TMDB.StreamingPlatform.allPlatforms) { platform in
-                                Text(platform.name).tag(platform.id)
+                // Row 2: Genre, Sort, Reset
+                HStack(spacing: 12) {
+                    // Genre
+                    Menu {
+                        Button("All Genres") {
+                            viewModel.selectedGenre = nil
+                        }
+                        ForEach(viewModel.currentGenres) { genre in
+                            Button(genre.name) {
+                                viewModel.selectedGenre = genre
                             }
                         }
-                        .labelsHidden()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(viewModel.selectedGenre?.name ?? "All Genres")
+                                .font(.subheadline)
+                            Image(systemName: "chevron.down")
+                                .font(.caption2)
+                        }
+                        .foregroundStyle(.primary)
+                    }
+                    .onChange(of: viewModel.selectedGenre) {
+                        Task {
+                            await viewModel.discover()
+                        }
+                    }
 
-                        Picker("Region", selection: $selectedRegion) {
-                            ForEach(Constants.TMDB.Region.availableRegions, id: \.code) { region in
-                                Text(region.name).tag(region.code)
+                    // Sort
+                    Menu {
+                        ForEach(SortOption.allCases) { option in
+                            Button(option.displayName) {
+                                viewModel.selectedSortOption = option
                             }
                         }
-                        .labelsHidden()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(viewModel.selectedSortOption.displayName)
+                                .font(.subheadline)
+                            Image(systemName: "chevron.down")
+                                .font(.caption2)
+                        }
+                        .foregroundStyle(.primary)
+                    }
+                    .onChange(of: viewModel.selectedSortOption) {
+                        if viewModel.selectedSortOption.isLocalSort {
+                            viewModel.sortLocally()
+                        } else {
+                            Task {
+                                await viewModel.discover()
+                            }
+                        }
+                    }
+
+                    Spacer()
+
+                    // Reset button
+                    Button {
+                        viewModel.resetFilters()
+                        Task {
+                            await viewModel.discover()
+                        }
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(.bar)
+            #else
+            // macOS: Single row compact filter layout
+            HStack(spacing: 8) {
+                // Platform
+                Picker("", selection: $selectedPlatform) {
+                    ForEach(Constants.TMDB.StreamingPlatform.allPlatforms) { platform in
+                        Text(platform.name).tag(platform.id)
                     }
                 }
+                .labelsHidden()
+                .frame(width: 100)
 
-                // Content type
-                Picker("Content Type", selection: $viewModel.selectedContentType) {
+                // Region
+                Picker("", selection: $selectedRegion) {
+                    ForEach(Constants.TMDB.Region.availableRegions, id: \.code) { region in
+                        Text(region.name).tag(region.code)
+                    }
+                }
+                .labelsHidden()
+                .frame(width: 90)
+
+                Divider()
+                    .frame(height: 20)
+
+                // Content type (segmented, no label)
+                Picker("", selection: $viewModel.selectedContentType) {
                     ForEach(ContentType.allCases) { type in
                         Text(type.rawValue).tag(type)
                     }
                 }
                 .pickerStyle(.segmented)
+                .labelsHidden()
+                .frame(width: 160)
                 .onChange(of: viewModel.selectedContentType) {
                     Task {
-                        await viewModel.search()
+                        await viewModel.discover()
                     }
                 }
 
-                // Filters row (hidden in search mode)
-                if !viewModel.isSearchMode {
-                    HStack(spacing: 12) {
-                        Picker("Genre", selection: $viewModel.selectedGenre) {
-                            Text("All Genres").tag(nil as Genre?)
-                            ForEach(viewModel.currentGenres) { genre in
-                                Text(genre.name).tag(genre as Genre?)
-                            }
-                        }
-                        .labelsHidden()
-                        .onChange(of: viewModel.selectedGenre) {
-                            Task {
-                                await viewModel.search()
-                            }
-                        }
+                Divider()
+                    .frame(height: 20)
 
-                        Picker("Sort", selection: $viewModel.selectedSortOption) {
-                            ForEach(SortOption.allCases) { option in
-                                Text(option.displayName).tag(option)
-                            }
-                        }
-                        .labelsHidden()
-                        .onChange(of: viewModel.selectedSortOption) {
-                            if viewModel.selectedSortOption.isLocalSort {
-                                viewModel.sortLocally()
-                            } else {
-                                Task {
-                                    await viewModel.search()
-                                }
-                            }
+                // Genre
+                Picker("", selection: $viewModel.selectedGenre) {
+                    Text("All Genres").tag(nil as Genre?)
+                    ForEach(viewModel.currentGenres) { genre in
+                        Text(genre.name).tag(genre as Genre?)
+                    }
+                }
+                .labelsHidden()
+                .frame(width: 120)
+                .onChange(of: viewModel.selectedGenre) {
+                    Task {
+                        await viewModel.discover()
+                    }
+                }
+
+                // Sort
+                Picker("", selection: $viewModel.selectedSortOption) {
+                    ForEach(SortOption.allCases) { option in
+                        Text(option.displayName).tag(option)
+                    }
+                }
+                .labelsHidden()
+                .frame(width: 130)
+                .onChange(of: viewModel.selectedSortOption) {
+                    if viewModel.selectedSortOption.isLocalSort {
+                        viewModel.sortLocally()
+                    } else {
+                        Task {
+                            await viewModel.discover()
                         }
                     }
                 }
+
+                Spacer()
+
+                // Reset button (icon only)
+                Button {
+                    viewModel.resetFilters()
+                    Task {
+                        await viewModel.discover()
+                    }
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+                .help("Reset Filters")
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 8)
             .background(.bar)
+            #endif
 
             Divider()
 
@@ -213,7 +328,7 @@ struct SearchResultsView: View {
                 Spacer()
                 ErrorView(message: error) {
                     Task {
-                        await viewModel.search()
+                        await viewModel.discover()
                     }
                 }
                 Spacer()
@@ -273,7 +388,7 @@ struct SearchResultsView: View {
         }
         .task {
             if viewModel.movies.isEmpty && viewModel.tvShows.isEmpty {
-                await viewModel.search()
+                await viewModel.discover()
             }
         }
     }
@@ -297,6 +412,45 @@ struct ErrorView: View {
                 .buttonStyle(.bordered)
         }
         .padding()
+    }
+}
+
+// MARK: - Custom Navigation Title Modifier
+
+struct CustomNavigationTitleModifier: ViewModifier {
+    @Binding var showSettings: Bool
+
+    func body(content: Content) -> some View {
+        #if os(macOS)
+        content
+            .navigationTitle("WatchNext")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                }
+            }
+        #else
+        content
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("WatchNext")
+                        .font(.custom("Avenir-Light", size: 18))
+                        .tracking(1.5)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                }
+            }
+        #endif
     }
 }
 

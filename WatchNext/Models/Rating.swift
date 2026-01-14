@@ -54,3 +54,31 @@ struct Genre: Identifiable, Codable, Hashable {
 struct GenresResponse: Codable {
     let genres: [Genre]
 }
+
+// MARK: - Company Models
+
+struct Company: Identifiable, Codable {
+    let id: Int
+    let name: String
+    let logoPath: String?
+    let originCountry: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name
+        case logoPath = "logo_path"
+        case originCountry = "origin_country"
+    }
+}
+
+struct CompanySearchResponse: Codable {
+    let page: Int
+    let results: [Company]
+    let totalPages: Int
+    let totalResults: Int
+
+    enum CodingKeys: String, CodingKey {
+        case page, results
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
+}

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum Constants {
     enum TMDB {
@@ -151,4 +152,90 @@ enum ContentType: String, CaseIterable, Identifiable {
     case tvShows = "TV Shows"
 
     var id: String { rawValue }
+}
+
+// MARK: - Color Extensions
+extension Color {
+    // Brand Colors
+    static let brandPrimary = Color("BrandPrimary", bundle: nil)
+    static let brandSecondary = Color("BrandSecondary", bundle: nil)
+
+    // Rating Badge Colors
+    static let tmdbBlue = Color("TMDBBlue", bundle: nil)
+    static let imdbGold = Color("IMDbGold", bundle: nil)
+    static let rtRed = Color("RTRed", bundle: nil)
+
+    // Fallback colors
+    static var tmdbBlueFallback: Color {
+        Color(red: 0.01, green: 0.66, blue: 0.86)
+    }
+
+    static var imdbGoldFallback: Color {
+        Color(red: 0.95, green: 0.71, blue: 0.20)
+    }
+
+    static var rtRedFallback: Color {
+        Color(red: 0.98, green: 0.22, blue: 0.26)
+    }
+
+    // Brand color variants for different UI contexts
+    static var brandAccent: Color {
+        Color.accentColor
+    }
+
+    static var brandSubtle: Color {
+        brandSecondary.opacity(0.5)
+    }
+}
+
+// MARK: - Typography Extensions
+extension Font {
+    static func cardTitle(for platform: PlatformType) -> Font {
+        switch platform {
+        case .iOS:
+            return .system(size: 14, weight: .semibold)
+        case .macOS:
+            return .system(size: 13, weight: .medium)
+        }
+    }
+
+    static func cardYear(for platform: PlatformType) -> Font {
+        switch platform {
+        case .iOS:
+            return .system(size: 12)
+        case .macOS:
+            return .caption
+        }
+    }
+
+    static func ratingLabel(for platform: PlatformType) -> Font {
+        switch platform {
+        case .iOS:
+            return .system(size: 9, weight: .medium)
+        case .macOS:
+            return .system(size: 8)
+        }
+    }
+
+    static func ratingValue(for platform: PlatformType) -> Font {
+        switch platform {
+        case .iOS:
+            return .system(size: 11, weight: .bold)
+        case .macOS:
+            return .system(size: 10, weight: .bold)
+        }
+    }
+}
+
+enum PlatformType {
+    case iOS
+    case macOS
+
+    static var current: PlatformType {
+        #if os(iOS)
+        return .iOS
+        #else
+        return .macOS
+        #endif
+    }
 }

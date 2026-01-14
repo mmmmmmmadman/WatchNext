@@ -13,9 +13,6 @@ class SearchViewModel {
     var totalPages = 1
     var hasMorePages: Bool { currentPage < totalPages }
 
-    var searchQuery: String = ""
-    var isSearchMode: Bool { !searchQuery.isEmpty }
-
     var selectedContentType: ContentType = .movies
     var selectedGenre: Genre?
     var selectedSortOption: SortOption = .popularityDesc
@@ -50,7 +47,7 @@ class SearchViewModel {
         }
     }
 
-    func search() async {
+    func discover() async {
         guard APIConfig.hasTMDBKey else {
             errorMessage = "Please configure your TMDB API key"
             return
@@ -63,48 +60,32 @@ class SearchViewModel {
         tvShows = []
 
         do {
-            if isSearchMode {
-                // Keyword search mode
-                switch selectedContentType {
-                case .movies:
-                    let response = try await tmdbService.searchMovies(query: searchQuery, page: currentPage)
-                    movies = response.results
-                    totalPages = response.totalPages
+            switch selectedContentType {
+            case .movies:
+                let response = try await tmdbService.discoverMovies(
+                    page: currentPage,
+                    genreId: selectedGenre?.id,
+                    sortBy: selectedSortOption,
+                    minYear: minYear,
+                    maxYear: maxYear,
+                    minRating: minRating,
+                    region: APIConfig.selectedRegion
+                )
+                movies = response.results
+                totalPages = response.totalPages
 
-                case .tvShows:
-                    let response = try await tmdbService.searchTVShows(query: searchQuery, page: currentPage)
-                    tvShows = response.results
-                    totalPages = response.totalPages
-                }
-            } else {
-                // Discovery mode (platform filtered)
-                switch selectedContentType {
-                case .movies:
-                    let response = try await tmdbService.discoverMovies(
-                        page: currentPage,
-                        genreId: selectedGenre?.id,
-                        sortBy: selectedSortOption,
-                        minYear: minYear,
-                        maxYear: maxYear,
-                        minRating: minRating,
-                        region: APIConfig.selectedRegion
-                    )
-                    movies = response.results
-                    totalPages = response.totalPages
-
-                case .tvShows:
-                    let response = try await tmdbService.discoverTVShows(
-                        page: currentPage,
-                        genreId: selectedGenre?.id,
-                        sortBy: selectedSortOption,
-                        minYear: minYear,
-                        maxYear: maxYear,
-                        minRating: minRating,
-                        region: APIConfig.selectedRegion
-                    )
-                    tvShows = response.results
-                    totalPages = response.totalPages
-                }
+            case .tvShows:
+                let response = try await tmdbService.discoverTVShows(
+                    page: currentPage,
+                    genreId: selectedGenre?.id,
+                    sortBy: selectedSortOption,
+                    minYear: minYear,
+                    maxYear: maxYear,
+                    minRating: minRating,
+                    region: APIConfig.selectedRegion
+                )
+                tvShows = response.results
+                totalPages = response.totalPages
             }
         } catch {
             errorMessage = error.localizedDescription
@@ -120,42 +101,30 @@ class SearchViewModel {
         currentPage += 1
 
         do {
-            if isSearchMode {
-                switch selectedContentType {
-                case .movies:
-                    let response = try await tmdbService.searchMovies(query: searchQuery, page: currentPage)
-                    movies.append(contentsOf: response.results)
+            switch selectedContentType {
+            case .movies:
+                let response = try await tmdbService.discoverMovies(
+                    page: currentPage,
+                    genreId: selectedGenre?.id,
+                    sortBy: selectedSortOption,
+                    minYear: minYear,
+                    maxYear: maxYear,
+                    minRating: minRating,
+                    region: APIConfig.selectedRegion
+                )
+                movies.append(contentsOf: response.results)
 
-                case .tvShows:
-                    let response = try await tmdbService.searchTVShows(query: searchQuery, page: currentPage)
-                    tvShows.append(contentsOf: response.results)
-                }
-            } else {
-                switch selectedContentType {
-                case .movies:
-                    let response = try await tmdbService.discoverMovies(
-                        page: currentPage,
-                        genreId: selectedGenre?.id,
-                        sortBy: selectedSortOption,
-                        minYear: minYear,
-                        maxYear: maxYear,
-                        minRating: minRating,
-                        region: APIConfig.selectedRegion
-                    )
-                    movies.append(contentsOf: response.results)
-
-                case .tvShows:
-                    let response = try await tmdbService.discoverTVShows(
-                        page: currentPage,
-                        genreId: selectedGenre?.id,
-                        sortBy: selectedSortOption,
-                        minYear: minYear,
-                        maxYear: maxYear,
-                        minRating: minRating,
-                        region: APIConfig.selectedRegion
-                    )
-                    tvShows.append(contentsOf: response.results)
-                }
+            case .tvShows:
+                let response = try await tmdbService.discoverTVShows(
+                    page: currentPage,
+                    genreId: selectedGenre?.id,
+                    sortBy: selectedSortOption,
+                    minYear: minYear,
+                    maxYear: maxYear,
+                    minRating: minRating,
+                    region: APIConfig.selectedRegion
+                )
+                tvShows.append(contentsOf: response.results)
             }
         } catch {
             errorMessage = error.localizedDescription
@@ -221,14 +190,30 @@ class SearchViewModel {
             movies.sort { ($0.imdbRating ?? 0) > ($1.imdbRating ?? 0) }
             tvShows.sort { ($0.imdbRating ?? 0) > ($1.imdbRating ?? 0) }
         case .imdbRatingAsc:
-            movies.sort { ($0.imdbRating ?? 0) < ($1.imdbRating ?? 0) }
-            tvShows.sort { ($0.imdbRating ?? 0) < ($1.imdbRating ?? 0) }
+            movies.sort {
+                guard let r1 = $0.imdbRating else { return false }
+                guard let r2 = $1.imdbRating else { return true }
+                return r1 < r2
+            }
+            tvShows.sort {
+                guard let r1 = $0.imdbRating else { return false }
+                guard let r2 = $1.imdbRating else { return true }
+                return r1 < r2
+            }
         case .rtRatingDesc:
             movies.sort { ($0.rottenTomatoesRating ?? 0) > ($1.rottenTomatoesRating ?? 0) }
             tvShows.sort { ($0.rottenTomatoesRating ?? 0) > ($1.rottenTomatoesRating ?? 0) }
         case .rtRatingAsc:
-            movies.sort { ($0.rottenTomatoesRating ?? 0) < ($1.rottenTomatoesRating ?? 0) }
-            tvShows.sort { ($0.rottenTomatoesRating ?? 0) < ($1.rottenTomatoesRating ?? 0) }
+            movies.sort {
+                guard let r1 = $0.rottenTomatoesRating else { return false }
+                guard let r2 = $1.rottenTomatoesRating else { return true }
+                return r1 < r2
+            }
+            tvShows.sort {
+                guard let r1 = $0.rottenTomatoesRating else { return false }
+                guard let r2 = $1.rottenTomatoesRating else { return true }
+                return r1 < r2
+            }
         default:
             break
         }

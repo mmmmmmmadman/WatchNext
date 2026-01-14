@@ -46,8 +46,8 @@ struct MovieDetailView: View {
 
                         VStack(alignment: .leading, spacing: 8) {
                             Text(movie.title)
-                                .font(.title2)
-                                .fontWeight(.bold)
+                                .font(.custom("Avenir-Light", size: 24))
+                                .tracking(1)
 
                             if movie.originalTitle != movie.title {
                                 Text(movie.originalTitle)
@@ -67,20 +67,21 @@ struct MovieDetailView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Ratings")
-                            .font(.headline)
+                            .font(.custom("Avenir-Light", size: 18))
+                            .tracking(1)
 
                         HStack(spacing: 20) {
                             RatingCard(
                                 title: "TMDB",
                                 value: String(format: "%.1f", movie.voteAverage),
-                                color: .blue
+                                color: .tmdbBlueFallback
                             )
 
                             if let imdb = movie.imdbRating {
                                 RatingCard(
                                     title: "IMDb",
                                     value: String(format: "%.1f", imdb),
-                                    color: .yellow
+                                    color: .imdbGoldFallback
                                 )
                             }
 
@@ -88,7 +89,7 @@ struct MovieDetailView: View {
                                 RatingCard(
                                     title: "RT",
                                     value: "\(rt)",
-                                    color: .red
+                                    color: .rtRedFallback
                                 )
                             }
                         }
@@ -98,7 +99,8 @@ struct MovieDetailView: View {
 
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Overview")
-                            .font(.headline)
+                            .font(.custom("Avenir-Light", size: 18))
+                            .tracking(1)
 
                         Text(movie.overview.isEmpty ? "No overview available." : movie.overview)
                             .font(.body)
@@ -120,10 +122,11 @@ struct MovieDetailView: View {
                                 Image(systemName: "play.tv.fill")
                                 Text("Watch on \(APIConfig.selectedPlatform.name)")
                             }
-                            .font(.headline)
+                            .font(.custom("Avenir-Light", size: 17))
+                            .tracking(0.8)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.blue)
+                            .background(Color.brandPrimary)
                             .foregroundStyle(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
@@ -190,8 +193,8 @@ struct TVShowDetailView: View {
 
                         VStack(alignment: .leading, spacing: 8) {
                             Text(show.name)
-                                .font(.title2)
-                                .fontWeight(.bold)
+                                .font(.custom("Avenir-Light", size: 24))
+                                .tracking(1)
 
                             if show.originalName != show.name {
                                 Text(show.originalName)
@@ -211,20 +214,21 @@ struct TVShowDetailView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Ratings")
-                            .font(.headline)
+                            .font(.custom("Avenir-Light", size: 18))
+                            .tracking(1)
 
                         HStack(spacing: 20) {
                             RatingCard(
                                 title: "TMDB",
                                 value: String(format: "%.1f", show.voteAverage),
-                                color: .blue
+                                color: .tmdbBlueFallback
                             )
 
                             if let imdb = show.imdbRating {
                                 RatingCard(
                                     title: "IMDb",
                                     value: String(format: "%.1f", imdb),
-                                    color: .yellow
+                                    color: .imdbGoldFallback
                                 )
                             }
 
@@ -232,7 +236,7 @@ struct TVShowDetailView: View {
                                 RatingCard(
                                     title: "RT",
                                     value: "\(rt)",
-                                    color: .red
+                                    color: .rtRedFallback
                                 )
                             }
                         }
@@ -242,7 +246,8 @@ struct TVShowDetailView: View {
 
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Overview")
-                            .font(.headline)
+                            .font(.custom("Avenir-Light", size: 18))
+                            .tracking(1)
 
                         Text(show.overview.isEmpty ? "No overview available." : show.overview)
                             .font(.body)
@@ -264,10 +269,11 @@ struct TVShowDetailView: View {
                                 Image(systemName: "play.tv.fill")
                                 Text("Watch on \(APIConfig.selectedPlatform.name)")
                             }
-                            .font(.headline)
+                            .font(.custom("Avenir-Light", size: 17))
+                            .tracking(0.8)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.blue)
+                            .background(Color.brandPrimary)
                             .foregroundStyle(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                         }

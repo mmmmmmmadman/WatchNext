@@ -14,10 +14,12 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Text("TMDB API Key")
+                                .font(.custom("Avenir-Light", size: 16))
+                                .tracking(0.5)
                             Spacer()
                             if APIConfig.hasTMDBKey {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(.green)
+                                    .foregroundStyle(Color.brandPrimary)
                             }
                         }
 
@@ -53,10 +55,12 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Text("OMDb API Key")
+                                .font(.custom("Avenir-Light", size: 16))
+                                .tracking(0.5)
                             Spacer()
                             if APIConfig.hasOMDbKey {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(.green)
+                                    .foregroundStyle(Color.brandPrimary)
                             }
                         }
 
@@ -96,7 +100,8 @@ struct SettingsView: View {
                                     .font(.system(size: 40))
                                     .foregroundStyle(.blue)
                                 Text("TMDB")
-                                    .font(.headline)
+                                    .font(.custom("Avenir-Light", size: 17))
+                                    .tracking(0.8)
                                     .foregroundStyle(.primary)
                             }
                         }
@@ -112,7 +117,14 @@ struct SettingsView: View {
                     Text("Data Provider")
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle("")
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Settings")
+                        .font(.custom("Avenir-Light", size: 20))
+                        .tracking(2)
+                }
+            }
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
@@ -121,6 +133,8 @@ struct SettingsView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .font(.custom("Avenir-Light", size: 15))
+                    .tracking(0.8)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
@@ -128,6 +142,8 @@ struct SettingsView: View {
                         APIConfig.setOMDbApiKey(omdbKey)
                         dismiss()
                     }
+                    .font(.custom("Avenir-Light", size: 15))
+                    .tracking(0.8)
                     .disabled(tmdbKey.isEmpty)
                 }
             }

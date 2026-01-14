@@ -250,6 +250,56 @@ actor TMDBService {
         return watchProviders.results[region]?.link
     }
 
+    func isMovieAvailableOnPlatform(movieId: Int, platform: Constants.TMDB.StreamingPlatform, region: String = APIConfig.selectedRegion) async throws -> Bool {
+        var components = URLComponents(string: "\(baseURL)/movie/\(movieId)/watch/providers")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let watchProviders = try JSONDecoder().decode(WatchProvidersResponse.self, from: data)
+
+        // 如果該地區沒有數據，保留項目（返回 true）
+        guard let regionData = watchProviders.results[region] else { return true }
+
+        let allProviders = (regionData.flatrate ?? []) + (regionData.buy ?? []) + (regionData.rent ?? [])
+
+        // 如果該地區沒有任何平台數據，保留項目
+        if allProviders.isEmpty { return true }
+
+        let availableIds = Set(allProviders.map { $0.providerId })
+        return !platform.providerIds.filter { availableIds.contains($0) }.isEmpty
+    }
+
+    func isTVShowAvailableOnPlatform(tvId: Int, platform: Constants.TMDB.StreamingPlatform, region: String = APIConfig.selectedRegion) async throws -> Bool {
+        var components = URLComponents(string: "\(baseURL)/tv/\(tvId)/watch/providers")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let watchProviders = try JSONDecoder().decode(WatchProvidersResponse.self, from: data)
+
+        // 如果該地區沒有數據，保留項目（返回 true）
+        guard let regionData = watchProviders.results[region] else { return true }
+
+        let allProviders = (regionData.flatrate ?? []) + (regionData.buy ?? []) + (regionData.rent ?? [])
+
+        // 如果該地區沒有任何平台數據，保留項目
+        if allProviders.isEmpty { return true }
+
+        let availableIds = Set(allProviders.map { $0.providerId })
+        return !platform.providerIds.filter { availableIds.contains($0) }.isEmpty
+    }
+
     func searchMovies(query: String, page: Int = 1) async throws -> DiscoverResponse<Movie> {
         var components = URLComponents(string: "\(baseURL)/search/movie")!
         components.queryItems = [
@@ -275,6 +325,122 @@ actor TMDBService {
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "include_adult", value: "false"),
         ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(DiscoverResponse<TVShow>.self, from: data)
+    }
+
+    // MARK: - Company Search
+
+    func searchCompanies(query: String) async throws -> [Company] {
+        var components = URLComponents(string: "\(baseURL)/search/company")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "query", value: query),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let result = try JSONDecoder().decode(CompanySearchResponse.self, from: data)
+        return result.results
+    }
+
+    func discoverMoviesByCompany(
+        companyId: Int,
+        page: Int = 1,
+        genreId: Int? = nil,
+        sortBy: SortOption = .popularityDesc,
+        minYear: Int? = nil,
+        maxYear: Int? = nil,
+        minRating: Double? = nil,
+        region: String? = nil,
+        platform: Constants.TMDB.StreamingPlatform? = nil
+    ) async throws -> DiscoverResponse<Movie> {
+        var components = URLComponents(string: "\(baseURL)/discover/movie")!
+        var queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "with_companies", value: String(companyId)),
+            URLQueryItem(name: "sort_by", value: sortBy.apiSortValue),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "include_adult", value: "false"),
+        ]
+
+        if let region = region, let platform = platform {
+            let providerString = platform.providerIds.map { String($0) }.joined(separator: "|")
+            queryItems.append(URLQueryItem(name: "watch_region", value: region))
+            queryItems.append(URLQueryItem(name: "with_watch_providers", value: providerString))
+        }
+        if let genreId = genreId {
+            queryItems.append(URLQueryItem(name: "with_genres", value: String(genreId)))
+        }
+        if let minYear = minYear {
+            queryItems.append(URLQueryItem(name: "primary_release_date.gte", value: "\(minYear)-01-01"))
+        }
+        if let maxYear = maxYear {
+            queryItems.append(URLQueryItem(name: "primary_release_date.lte", value: "\(maxYear)-12-31"))
+        }
+        if let minRating = minRating {
+            queryItems.append(URLQueryItem(name: "vote_average.gte", value: String(minRating)))
+            queryItems.append(URLQueryItem(name: "vote_count.gte", value: "50"))
+        }
+
+        components.queryItems = queryItems
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(DiscoverResponse<Movie>.self, from: data)
+    }
+
+    func discoverTVShowsByCompany(
+        companyId: Int,
+        page: Int = 1,
+        genreId: Int? = nil,
+        sortBy: SortOption = .popularityDesc,
+        minYear: Int? = nil,
+        maxYear: Int? = nil,
+        minRating: Double? = nil,
+        region: String? = nil,
+        platform: Constants.TMDB.StreamingPlatform? = nil
+    ) async throws -> DiscoverResponse<TVShow> {
+        var components = URLComponents(string: "\(baseURL)/discover/tv")!
+        var queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "with_companies", value: String(companyId)),
+            URLQueryItem(name: "sort_by", value: sortBy.apiSortValue.replacingOccurrences(of: "release_date", with: "first_air_date")),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "include_adult", value: "false"),
+        ]
+
+        if let region = region, let platform = platform {
+            let providerString = platform.providerIds.map { String($0) }.joined(separator: "|")
+            queryItems.append(URLQueryItem(name: "watch_region", value: region))
+            queryItems.append(URLQueryItem(name: "with_watch_providers", value: providerString))
+        }
+        if let genreId = genreId {
+            queryItems.append(URLQueryItem(name: "with_genres", value: String(genreId)))
+        }
+        if let minYear = minYear {
+            queryItems.append(URLQueryItem(name: "first_air_date.gte", value: "\(minYear)-01-01"))
+        }
+        if let maxYear = maxYear {
+            queryItems.append(URLQueryItem(name: "first_air_date.lte", value: "\(maxYear)-12-31"))
+        }
+        if let minRating = minRating {
+            queryItems.append(URLQueryItem(name: "vote_average.gte", value: String(minRating)))
+            queryItems.append(URLQueryItem(name: "vote_count.gte", value: "50"))
+        }
+
+        components.queryItems = queryItems
 
         let (data, response) = try await URLSession.shared.data(from: components.url!)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
