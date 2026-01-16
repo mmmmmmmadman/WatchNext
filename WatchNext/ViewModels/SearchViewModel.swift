@@ -220,24 +220,10 @@ class SearchViewModel {
     }
 
     func getWatchLink(for movie: Movie) async -> URL? {
-        do {
-            if let link = try await tmdbService.getMovieWatchProviderLink(movieId: movie.id) {
-                return URL(string: link)
-            }
-        } catch {
-            // Silently fail
-        }
-        return nil
+        APIConfig.selectedPlatform.searchURL(for: movie.title)
     }
 
     func getWatchLink(for show: TVShow) async -> URL? {
-        do {
-            if let link = try await tmdbService.getTVShowWatchProviderLink(tvId: show.id) {
-                return URL(string: link)
-            }
-        } catch {
-            // Silently fail
-        }
-        return nil
+        APIConfig.selectedPlatform.searchURL(for: show.name)
     }
 }

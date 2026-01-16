@@ -29,6 +29,28 @@ enum Constants {
             static func find(by id: String) -> StreamingPlatform? {
                 allPlatforms.first { $0.id == id }
             }
+
+            func searchURL(for title: String) -> URL? {
+                guard let encoded = title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+                    return nil
+                }
+
+                let urlString: String
+                switch id {
+                case "appletv":
+                    urlString = "https://www.google.com/search?q=\(encoded)+site:tv.apple.com"
+                case "netflix":
+                    urlString = "https://www.google.com/search?q=\(encoded)+site:netflix.com"
+                case "prime":
+                    urlString = "https://www.google.com/search?q=\(encoded)+site:primevideo.com"
+                case "disney":
+                    urlString = "https://www.google.com/search?q=\(encoded)+site:disneyplus.com"
+                default:
+                    return nil
+                }
+
+                return URL(string: urlString)
+            }
         }
 
         enum Region {
