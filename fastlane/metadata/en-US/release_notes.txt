@@ -1,0 +1,6 @@
+What's New in Version 1.4:
+
+- Added API setup guide in Settings
+- Step-by-step instructions for obtaining TMDB and OMDb API keys
+- Multi-language support: English, Traditional Chinese, and Japanese
+- Users can switch languages directly within the guide

@@ -1,0 +1,25 @@
+# Deliverfile for WatchNext
+
+# App version - creates new version if needed
+app_version("1.4")
+
+# Skip binary upload (we'll upload separately)
+skip_binary_upload(true)
+
+# Skip screenshots
+skip_screenshots(true)
+
+# Skip metadata validation errors
+skip_metadata(false)
+
+# Force upload even if no changes detected
+force(true)
+
+# Automatically submit for review after upload
+submit_for_review(false)
+
+# App Store metadata path
+metadata_path("./fastlane/metadata")
+
+# Copyright
+copyright("© 2026 madzine")
