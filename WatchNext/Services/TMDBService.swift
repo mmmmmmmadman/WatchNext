@@ -300,6 +300,38 @@ actor TMDBService {
         return !platform.providerIds.filter { availableIds.contains($0) }.isEmpty
     }
 
+    // MARK: - Recommendations
+
+    func getMovieRecommendations(movieId: Int, page: Int = 1) async throws -> DiscoverResponse<Movie> {
+        var components = URLComponents(string: "\(baseURL)/movie/\(movieId)/recommendations")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "page", value: String(page)),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(DiscoverResponse<Movie>.self, from: data)
+    }
+
+    func getTVShowRecommendations(tvId: Int, page: Int = 1) async throws -> DiscoverResponse<TVShow> {
+        var components = URLComponents(string: "\(baseURL)/tv/\(tvId)/recommendations")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "page", value: String(page)),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(DiscoverResponse<TVShow>.self, from: data)
+    }
+
     func searchMovies(query: String, page: Int = 1) async throws -> DiscoverResponse<Movie> {
         var components = URLComponents(string: "\(baseURL)/search/movie")!
         components.queryItems = [

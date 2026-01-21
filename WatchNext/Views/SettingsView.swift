@@ -269,6 +269,9 @@ struct SettingsView: View {
     @State private var showOMDbKey = false
     @State private var showTMDBHelp = false
     @State private var showOMDbHelp = false
+    @State private var iCloudStatus: String = "Checking..."
+    @State private var iCloudAvailable = false
+    @State private var showDeleteConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -325,9 +328,6 @@ struct SettingsView: View {
                 } footer: {
                     Text("Required for searching movies and TV shows.")
                 }
-                .sheet(isPresented: $showTMDBHelp) {
-                    APIHelpSheet(apiType: .tmdb)
-                }
 
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
@@ -381,8 +381,42 @@ struct SettingsView: View {
                 } footer: {
                     Text("Optional. Enables IMDb and Rotten Tomatoes ratings.")
                 }
-                .sheet(isPresented: $showOMDbHelp) {
-                    APIHelpSheet(apiType: .omdb)
+
+                Section {
+                    HStack {
+                        Image(systemName: iCloudAvailable ? "icloud.fill" : "icloud.slash")
+                            .font(.title2)
+                            .foregroundStyle(iCloudAvailable ? .blue : .secondary)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("iCloud Sync")
+                                .font(.custom("Avenir-Light", size: 16))
+                                .tracking(0.5)
+
+                            Text(iCloudStatus)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
+
+                        if iCloudAvailable {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.green)
+                        }
+                    }
+
+                    if iCloudAvailable {
+                        Button(role: .destructive) {
+                            showDeleteConfirmation = true
+                        } label: {
+                            Label("Delete Cloud Data", systemImage: "trash")
+                        }
+                    }
+                } header: {
+                    Text("Sync")
+                } footer: {
+                    Text(iCloudAvailable ? "Your favorites are automatically synced across all your devices." : "Sign in to iCloud in System Settings to sync favorites.")
                 }
 
                 Section {
@@ -416,6 +450,10 @@ struct SettingsView: View {
                         Text("WatchNext")
                             .font(.custom("Avenir-Light", size: 18))
                             .tracking(1.5)
+
+                        Text("MADZINE")
+                            .font(.caption)
+                            .foregroundStyle(Color.madzineOrange)
 
                         Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                             .font(.caption)
@@ -470,10 +508,62 @@ struct SettingsView: View {
                 }
             }
         }
+        .sheet(isPresented: $showTMDBHelp) {
+            APIHelpSheet(apiType: .tmdb)
+        }
+        .sheet(isPresented: $showOMDbHelp) {
+            APIHelpSheet(apiType: .omdb)
+        }
+        .alert("Delete Cloud Data", isPresented: $showDeleteConfirmation) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                Task {
+                    try? await SyncService.shared.deleteAllCloudData()
+                }
+            }
+        } message: {
+            Text("This will delete all your synced favorites from iCloud. Your local data will be preserved.")
+        }
+        .task {
+            await checkiCloudStatus()
+        }
         #if os(macOS)
-        .frame(minWidth: 500, minHeight: 450)
+        .frame(minWidth: 500, minHeight: 650)
         .padding(.horizontal, 20)
         #endif
+    }
+
+    private func checkiCloudStatus() async {
+        do {
+            let status = try await CloudKitService.shared.checkAccountStatus()
+            await MainActor.run {
+                switch status {
+                case .available:
+                    iCloudStatus = "Connected"
+                    iCloudAvailable = true
+                case .noAccount:
+                    iCloudStatus = "No iCloud account"
+                    iCloudAvailable = false
+                case .restricted:
+                    iCloudStatus = "Restricted"
+                    iCloudAvailable = false
+                case .couldNotDetermine:
+                    iCloudStatus = "Unknown"
+                    iCloudAvailable = false
+                case .temporarilyUnavailable:
+                    iCloudStatus = "Temporarily unavailable"
+                    iCloudAvailable = false
+                @unknown default:
+                    iCloudStatus = "Unknown"
+                    iCloudAvailable = false
+                }
+            }
+        } catch {
+            await MainActor.run {
+                iCloudStatus = "Error checking status"
+                iCloudAvailable = false
+            }
+        }
     }
 }
 

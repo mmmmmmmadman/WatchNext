@@ -2,39 +2,59 @@ import SwiftUI
 
 struct MovieCardView: View {
     let movie: Movie
+    var favoritesViewModel: FavoritesViewModel?
+
+    private var isFavorite: Bool {
+        favoritesViewModel?.isFavorite(tmdbId: movie.id, mediaType: .movie) ?? false
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AsyncImage(url: movie.posterURL) { phase in
-                switch phase {
-                case .empty:
-                    Rectangle()
-                        .fill(.quaternary)
-                        .overlay {
-                            ProgressView()
-                        }
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    Rectangle()
-                        .fill(.quaternary)
-                        .overlay {
-                            Image(systemName: "photo")
-                                .font(.largeTitle)
-                                .foregroundStyle(.tertiary)
-                        }
-                @unknown default:
-                    EmptyView()
+            ZStack(alignment: .topTrailing) {
+                AsyncImage(url: movie.posterURL) { phase in
+                    switch phase {
+                    case .empty:
+                        Rectangle()
+                            .fill(.quaternary)
+                            .overlay {
+                                ProgressView()
+                            }
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    case .failure:
+                        Rectangle()
+                            .fill(.quaternary)
+                            .overlay {
+                                Image(systemName: "photo")
+                                    .font(.largeTitle)
+                                    .foregroundStyle(.tertiary)
+                            }
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
+                #if os(iOS)
+                .frame(height: 165)
+                #else
+                .frame(height: 225)
+                #endif
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                if favoritesViewModel != nil {
+                    Button {
+                        favoritesViewModel?.toggleFavorite(movie: movie)
+                    } label: {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .font(.system(size: 14, weight: .light))
+                            .foregroundStyle(isFavorite ? .yellow : .white.opacity(0.7))
+                            .shadow(color: .black.opacity(0.3), radius: 1, x: 0, y: 1)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(6)
                 }
             }
-            #if os(iOS)
-            .frame(height: 165)
-            #else
-            .frame(height: 225)
-            #endif
-            .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(movie.title)
@@ -64,39 +84,59 @@ struct MovieCardView: View {
 
 struct TVShowCardView: View {
     let show: TVShow
+    var favoritesViewModel: FavoritesViewModel?
+
+    private var isFavorite: Bool {
+        favoritesViewModel?.isFavorite(tmdbId: show.id, mediaType: .tv) ?? false
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AsyncImage(url: show.posterURL) { phase in
-                switch phase {
-                case .empty:
-                    Rectangle()
-                        .fill(.quaternary)
-                        .overlay {
-                            ProgressView()
+            ZStack(alignment: .topTrailing) {
+                AsyncImage(url: show.posterURL) { phase in
+                    switch phase {
+                    case .empty:
+                        Rectangle()
+                            .fill(.quaternary)
+                            .overlay {
+                                ProgressView()
+                            }
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    case .failure:
+                        Rectangle()
+                            .fill(.quaternary)
+                            .overlay {
+                                Image(systemName: "photo")
+                                    .font(.largeTitle)
+                                    .foregroundStyle(.tertiary)
                         }
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    Rectangle()
-                        .fill(.quaternary)
-                        .overlay {
-                            Image(systemName: "photo")
-                                .font(.largeTitle)
-                                .foregroundStyle(.tertiary)
-                        }
-                @unknown default:
-                    EmptyView()
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
+                #if os(iOS)
+                .frame(height: 165)
+                #else
+                .frame(height: 225)
+                #endif
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                if favoritesViewModel != nil {
+                    Button {
+                        favoritesViewModel?.toggleFavorite(tvShow: show)
+                    } label: {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .font(.system(size: 14, weight: .light))
+                            .foregroundStyle(isFavorite ? .yellow : .white.opacity(0.7))
+                            .shadow(color: .black.opacity(0.3), radius: 1, x: 0, y: 1)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(6)
                 }
             }
-            #if os(iOS)
-            .frame(height: 165)
-            #else
-            .frame(height: 225)
-            #endif
-            .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(show.name)

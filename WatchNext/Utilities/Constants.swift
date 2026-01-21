@@ -182,6 +182,9 @@ extension Color {
     static let brandPrimary = Color("BrandPrimary", bundle: nil)
     static let brandSecondary = Color("BrandSecondary", bundle: nil)
 
+    // MADZINE Brand Color (Orange-Yellow)
+    static let madzineOrange = Color(red: 1.0, green: 0.6, blue: 0.0)
+
     // Rating Badge Colors
     static let tmdbBlue = Color("TMDBBlue", bundle: nil)
     static let imdbGold = Color("IMDbGold", bundle: nil)

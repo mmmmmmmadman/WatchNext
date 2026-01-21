@@ -7,8 +7,16 @@ struct WatchNextApp: App {
         let schema = Schema([
             CachedMovie.self,
             CachedTVShow.self,
+            FavoriteItem.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        // Explicitly disable CloudKit sync for SwiftData
+        // We use our own CloudKitService for FavoriteItem sync
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: .none
+        )
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])

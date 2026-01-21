@@ -4,30 +4,58 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = SearchViewModel()
+    @State private var favoritesViewModel = FavoritesViewModel()
     @State private var showSettings = false
+    @State private var showFavorites = false
     @State private var selectedPlatform = APIConfig.selectedPlatformId
     @State private var selectedRegion = APIConfig.selectedRegion
+    @State private var hasAPIKey = APIConfig.hasTMDBKey
 
     var body: some View {
         NavigationStack {
             Group {
-                if !APIConfig.hasTMDBKey {
+                if !hasAPIKey {
                     SettingsPromptView(showSettings: $showSettings)
                 } else {
                     SearchResultsView(
                         viewModel: viewModel,
+                        favoritesViewModel: favoritesViewModel,
                         selectedPlatform: $selectedPlatform,
                         selectedRegion: $selectedRegion,
-                        showSettings: $showSettings
+                        showSettings: $showSettings,
+                        showFavorites: $showFavorites
                     )
                 }
             }
-            .modifier(CustomNavigationTitleModifier(showSettings: $showSettings))
-            .sheet(isPresented: $showSettings) {
+            .modifier(CustomNavigationTitleModifier(showSettings: $showSettings, showFavorites: $showFavorites))
+            .sheet(isPresented: $showSettings, onDismiss: {
+                // Refresh API key status and load data after settings closed
+                hasAPIKey = APIConfig.hasTMDBKey
+                if hasAPIKey {
+                    Task {
+                        await viewModel.loadGenres()
+                        await viewModel.discover()
+                    }
+                }
+            }) {
                 SettingsView()
+            }
+            .sheet(isPresented: $showFavorites) {
+                NavigationStack {
+                    FavoritesView(viewModel: favoritesViewModel)
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Done") {
+                                    showFavorites = false
+                                }
+                            }
+                        }
+                }
             }
             .task {
                 viewModel.setCacheService(CacheService(modelContext: modelContext))
+                viewModel.setFavoritesViewModel(favoritesViewModel)
+                favoritesViewModel.setModelContext(modelContext)
                 await viewModel.loadGenres()
             }
             .onChange(of: selectedPlatform) {
@@ -80,9 +108,11 @@ struct SettingsPromptView: View {
 
 struct SearchResultsView: View {
     @Bindable var viewModel: SearchViewModel
+    @Bindable var favoritesViewModel: FavoritesViewModel
     @Binding var selectedPlatform: String
     @Binding var selectedRegion: String
     @Binding var showSettings: Bool
+    @Binding var showFavorites: Bool
 
     private var gridColumns: [GridItem] {
         #if os(iOS)
@@ -339,9 +369,9 @@ struct SearchResultsView: View {
                         case .movies:
                             ForEach(Array(viewModel.movies.enumerated()), id: \.element.id) { index, movie in
                                 NavigationLink {
-                                    MovieDetailView(movie: movie, viewModel: viewModel)
+                                    MovieDetailView(movie: movie, viewModel: viewModel, favoritesViewModel: favoritesViewModel)
                                 } label: {
-                                    MovieCardView(movie: movie)
+                                    MovieCardView(movie: movie, favoritesViewModel: favoritesViewModel)
                                 }
                                 .buttonStyle(.plain)
                                 .task {
@@ -359,9 +389,9 @@ struct SearchResultsView: View {
                         case .tvShows:
                             ForEach(Array(viewModel.tvShows.enumerated()), id: \.element.id) { index, show in
                                 NavigationLink {
-                                    TVShowDetailView(show: show, viewModel: viewModel)
+                                    TVShowDetailView(show: show, viewModel: viewModel, favoritesViewModel: favoritesViewModel)
                                 } label: {
-                                    TVShowCardView(show: show)
+                                    TVShowCardView(show: show, favoritesViewModel: favoritesViewModel)
                                 }
                                 .buttonStyle(.plain)
                                 .task {
@@ -419,6 +449,7 @@ struct ErrorView: View {
 
 struct CustomNavigationTitleModifier: ViewModifier {
     @Binding var showSettings: Bool
+    @Binding var showFavorites: Bool
 
     func body(content: Content) -> some View {
         #if os(macOS)
@@ -426,10 +457,17 @@ struct CustomNavigationTitleModifier: ViewModifier {
             .navigationTitle("WatchNext")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
+                    HStack(spacing: 8) {
+                        Button {
+                            showFavorites = true
+                        } label: {
+                            Image(systemName: "heart")
+                        }
+                        Button {
+                            showSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
                     }
                 }
             }
@@ -443,10 +481,17 @@ struct CustomNavigationTitleModifier: ViewModifier {
                         .tracking(1.5)
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
+                    HStack(spacing: 12) {
+                        Button {
+                            showFavorites = true
+                        } label: {
+                            Image(systemName: "heart")
+                        }
+                        Button {
+                            showSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
                     }
                 }
             }
@@ -456,5 +501,5 @@ struct CustomNavigationTitleModifier: ViewModifier {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [CachedMovie.self, CachedTVShow.self], inMemory: true)
+        .modelContainer(for: [CachedMovie.self, CachedTVShow.self, FavoriteItem.self], inMemory: true)
 }

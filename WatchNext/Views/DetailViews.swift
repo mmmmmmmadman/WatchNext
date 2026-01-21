@@ -3,6 +3,7 @@ import SwiftUI
 struct MovieDetailView: View {
     let movie: Movie
     let viewModel: SearchViewModel
+    @Bindable var favoritesViewModel: FavoritesViewModel
     @State private var watchURL: URL?
     @State private var isLoadingLink = false
 
@@ -139,6 +140,15 @@ struct MovieDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                FavoriteButton(
+                    isFavorite: favoritesViewModel.isFavorite(tmdbId: movie.id, mediaType: .movie)
+                ) {
+                    favoritesViewModel.toggleFavorite(movie: movie)
+                }
+            }
+        }
         .task {
             isLoadingLink = true
             watchURL = await viewModel.getWatchLink(for: movie)
@@ -150,6 +160,7 @@ struct MovieDetailView: View {
 struct TVShowDetailView: View {
     let show: TVShow
     let viewModel: SearchViewModel
+    @Bindable var favoritesViewModel: FavoritesViewModel
     @State private var watchURL: URL?
     @State private var isLoadingLink = false
 
@@ -286,6 +297,15 @@ struct TVShowDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                FavoriteButton(
+                    isFavorite: favoritesViewModel.isFavorite(tmdbId: show.id, mediaType: .tv)
+                ) {
+                    favoritesViewModel.toggleFavorite(tvShow: show)
+                }
+            }
+        }
         .task {
             isLoadingLink = true
             watchURL = await viewModel.getWatchLink(for: show)
@@ -329,7 +349,8 @@ struct RatingCard: View {
                 voteCount: 1500,
                 popularity: 50.0
             ),
-            viewModel: SearchViewModel()
+            viewModel: SearchViewModel(),
+            favoritesViewModel: FavoritesViewModel()
         )
     }
 }

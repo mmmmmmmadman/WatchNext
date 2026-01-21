@@ -1,9 +1,6 @@
 import Foundation
 
 enum APIConfig {
-    private static let defaultTMDBKey = "c3c8292a270ee5f469d324330d6523e2"
-    private static let defaultOMDbKey = "b097920a"
-
     static var tmdbApiKey: String {
         if let key = ProcessInfo.processInfo.environment["TMDB_API_KEY"], !key.isEmpty {
             return key
@@ -11,7 +8,7 @@ enum APIConfig {
         if let key = UserDefaults.standard.string(forKey: "TMDB_API_KEY"), !key.isEmpty {
             return key
         }
-        return defaultTMDBKey
+        return ""
     }
 
     static var omdbApiKey: String {
@@ -21,7 +18,7 @@ enum APIConfig {
         if let key = UserDefaults.standard.string(forKey: "OMDB_API_KEY"), !key.isEmpty {
             return key
         }
-        return defaultOMDbKey
+        return ""
     }
 
     static func setTMDBApiKey(_ key: String) {
