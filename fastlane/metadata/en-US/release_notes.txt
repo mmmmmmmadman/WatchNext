@@ -4,3 +4,5 @@ What's New in Version 1.4.5:
 - iCloud Sync: Your favorites automatically sync across all your devices
 - Favorites Genre: Discover new content based on your favorites with personalized recommendations
 - iOS Support: Now available on iPhone and iPad with full feature parity
+
+Note: This app requires your own TMDB API key to function. A step-by-step API setup guide is included in Settings to help you obtain your free API key.
