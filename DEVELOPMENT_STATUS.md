@@ -112,7 +112,7 @@ cp -R build/Build/Products/Release/WatchNext.app .
 
 - [ ] App Store 上架準備
 - [ ] Privacy Policy 頁面
-- [ ] 更多區域支援
+- [x] 更多區域支援（1.4.8：擴充至 121 個國家/地區）
 - [ ] 離線快取優化
 
 ## 已知限制
@@ -122,4 +122,4 @@ cp -R build/Build/Products/Release/WatchNext.app .
 
 ---
 
-最後更新：2026-01-14
+最後更新：2026-01-22

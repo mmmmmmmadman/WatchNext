@@ -1,7 +1,7 @@
 # Deliverfile for WatchNext
 
 # App version - creates new version if needed
-app_version("1.4.5")
+app_version("1.4.8")
 
 # Skip binary upload (we'll upload separately)
 skip_binary_upload(true)

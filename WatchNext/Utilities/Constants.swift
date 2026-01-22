@@ -57,17 +57,153 @@ enum Constants {
             static let defaultRegion = "TW"
 
             static let availableRegions: [(code: String, name: String)] = [
+                // East Asia
                 ("TW", "Taiwan"),
-                ("US", "United States"),
                 ("JP", "Japan"),
                 ("HK", "Hong Kong"),
-                ("GB", "United Kingdom"),
-                ("AU", "Australia"),
-                ("CA", "Canada"),
-                ("DE", "Germany"),
-                ("FR", "France"),
                 ("KR", "South Korea"),
+
+                // Southeast Asia
                 ("SG", "Singapore"),
+                ("MY", "Malaysia"),
+                ("TH", "Thailand"),
+                ("PH", "Philippines"),
+                ("ID", "Indonesia"),
+
+                // South Asia
+                ("IN", "India"),
+                ("PK", "Pakistan"),
+
+                // Middle East
+                ("AE", "United Arab Emirates"),
+                ("SA", "Saudi Arabia"),
+                ("IL", "Israel"),
+                ("TR", "Turkey"),
+                ("QA", "Qatar"),
+                ("KW", "Kuwait"),
+                ("BH", "Bahrain"),
+                ("OM", "Oman"),
+                ("JO", "Jordan"),
+                ("LB", "Lebanon"),
+                ("IQ", "Iraq"),
+                ("PS", "Palestine"),
+                ("YE", "Yemen"),
+
+                // North Africa
+                ("EG", "Egypt"),
+                ("MA", "Morocco"),
+                ("DZ", "Algeria"),
+                ("TN", "Tunisia"),
+                ("LY", "Libya"),
+
+                // Sub-Saharan Africa
+                ("ZA", "South Africa"),
+                ("NG", "Nigeria"),
+                ("KE", "Kenya"),
+                ("GH", "Ghana"),
+                ("TZ", "Tanzania"),
+                ("UG", "Uganda"),
+                ("ZM", "Zambia"),
+                ("MU", "Mauritius"),
+                ("MZ", "Mozambique"),
+                ("SN", "Senegal"),
+                ("CI", "Ivory Coast"),
+                ("NE", "Niger"),
+                ("CV", "Cape Verde"),
+                ("GQ", "Equatorial Guinea"),
+
+                // North America
+                ("US", "United States"),
+                ("CA", "Canada"),
+                ("MX", "Mexico"),
+
+                // Central America & Caribbean
+                ("CR", "Costa Rica"),
+                ("GT", "Guatemala"),
+                ("PA", "Panama"),
+                ("HN", "Honduras"),
+                ("SV", "El Salvador"),
+                ("CU", "Cuba"),
+                ("DO", "Dominican Republic"),
+                ("JM", "Jamaica"),
+                ("TT", "Trinidad and Tobago"),
+                ("BS", "Bahamas"),
+                ("BB", "Barbados"),
+                ("AG", "Antigua and Barbuda"),
+                ("LC", "Saint Lucia"),
+                ("TC", "Turks and Caicos Islands"),
+                ("BM", "Bermuda"),
+
+                // South America
+                ("BR", "Brazil"),
+                ("AR", "Argentina"),
+                ("CL", "Chile"),
+                ("CO", "Colombia"),
+                ("PE", "Peru"),
+                ("VE", "Venezuela"),
+                ("EC", "Ecuador"),
+                ("BO", "Bolivia"),
+                ("PY", "Paraguay"),
+                ("UY", "Uruguay"),
+                ("GF", "French Guiana"),
+
+                // Western Europe
+                ("GB", "United Kingdom"),
+                ("IE", "Ireland"),
+                ("FR", "France"),
+                ("DE", "Germany"),
+                ("NL", "Netherlands"),
+                ("BE", "Belgium"),
+                ("AT", "Austria"),
+                ("CH", "Switzerland"),
+                ("LI", "Liechtenstein"),
+                ("MC", "Monaco"),
+                ("LU", "Luxembourg"),
+
+                // Southern Europe
+                ("IT", "Italy"),
+                ("ES", "Spain"),
+                ("PT", "Portugal"),
+                ("GR", "Greece"),
+                ("MT", "Malta"),
+                ("SM", "San Marino"),
+                ("VA", "Vatican City"),
+                ("AD", "Andorra"),
+                ("GI", "Gibraltar"),
+
+                // Northern Europe
+                ("SE", "Sweden"),
+                ("NO", "Norway"),
+                ("DK", "Denmark"),
+                ("FI", "Finland"),
+                ("IS", "Iceland"),
+                ("EE", "Estonia"),
+                ("LV", "Latvia"),
+                ("LT", "Lithuania"),
+                ("GG", "Guernsey"),
+
+                // Central & Eastern Europe
+                ("PL", "Poland"),
+                ("CZ", "Czech Republic"),
+                ("SK", "Slovakia"),
+                ("HU", "Hungary"),
+                ("RO", "Romania"),
+                ("BG", "Bulgaria"),
+                ("HR", "Croatia"),
+                ("SI", "Slovenia"),
+                ("RS", "Serbia"),
+                ("BA", "Bosnia and Herzegovina"),
+                ("AL", "Albania"),
+                ("MK", "North Macedonia"),
+                ("XK", "Kosovo"),
+                ("MD", "Moldova"),
+                ("RU", "Russia"),
+
+                // Oceania
+                ("AU", "Australia"),
+                ("NZ", "New Zealand"),
+                ("FJ", "Fiji"),
+                ("PF", "French Polynesia"),
             ]
         }
     }
