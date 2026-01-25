@@ -7,70 +7,69 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B964236F944D1B0DA9D13F7 /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED1E30EFF158D23E92A79D /* FavoritesViewModel.swift */; };
+		0DB5FA07CAF465A08B5163C4 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA3249B1D8329E9BD92AE88 /* FavoritesView.swift */; };
 		0EA889D19A87FA853B67E0A8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E9275E07A877983E4518E3 /* ContentView.swift */; };
+		10A4B2AEF2A1166717B6114E /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D63D46EE5B8EB63494B1D8 /* SyncService.swift */; };
 		237B03566E2D0182D729451A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F977FCF4AAF80EEA91A02BA0 /* Constants.swift */; };
 		26D1733243911709152E471B /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76427BF9CEF471E4F80AAAF /* Rating.swift */; };
 		2CF01CA353E72D5C542EEDCF /* DetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75ADBF38357A49B1F680E55B /* DetailViews.swift */; };
-		2CF6A0F766C47C387A5AE6EB /* CloudKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4F604498CB1CACC910887 /* CloudKitService.swift */; };
 		2D760A6C0FC3D0D33204C71E /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = DC42F25B4841996D3A4E2B30 /* AppIcon.icns */; };
 		36ACB16101D2E453F39CD091 /* CardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C130F2A82A19215A787384 /* CardViews.swift */; };
 		3AD32FAA9BD7C0F1398496D4 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB159F3BC0A48D8009F1C08 /* APIConfig.swift */; };
-		53792B86A1D1AD99B3C906C8 /* FavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44085586FEB2501BB8C6AE6B /* FavoriteButton.swift */; };
+		48F00786AC56060BD21246B5 /* FavoriteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452667D6A5EEA1C375A39E65 /* FavoriteItem.swift */; };
 		53C3ADF0DB3392B12B8955FD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F977FCF4AAF80EEA91A02BA0 /* Constants.swift */; };
 		5737E5DF46C712E70BFE7A05 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EB976087C6FA18E1B326E9 /* Movie.swift */; };
 		59A335E58B852B0C558CE417 /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76427BF9CEF471E4F80AAAF /* Rating.swift */; };
 		5D2E296C506B8D0A0435154D /* CacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04059F24BC79DBF380A6ADC3 /* CacheService.swift */; };
-		6281B05F406FD78BBC6312CD /* FavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44085586FEB2501BB8C6AE6B /* FavoriteButton.swift */; };
 		6903602348A065591AB236B3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8015261266D7E1E3C4B0BB8 /* SettingsView.swift */; };
+		6D6411FF5AC795077AB52353 /* FavoriteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452667D6A5EEA1C375A39E65 /* FavoriteItem.swift */; };
+		74D6A6C3B89143F6A5480DC6 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA3249B1D8329E9BD92AE88 /* FavoritesView.swift */; };
 		7BC154444BB94C0A1170E227 /* OMDbService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7ADE24EBE69ED950E8F4B2 /* OMDbService.swift */; };
 		7D7BB827AC62F3D771A42EB5 /* TMDBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC915F7D108F4C19A371929F /* TMDBService.swift */; };
-		82F2E8461E731EC3ACE65D4C /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F39FE8B09FD18CF3E130EB4 /* SyncService.swift */; };
-		83BC5E2C6977514722931936 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A89420D9E46727BABE6B39 /* FavoritesView.swift */; };
 		8480E8326E4505148F6B82CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 836DA01B85825B6EEB188120 /* Assets.xcassets */; };
 		880DFE2424A37129CFDC2599 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8015261266D7E1E3C4B0BB8 /* SettingsView.swift */; };
 		88C016560F78C0ED0CA5E25A /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B052F4A21F63D3D351D480 /* SearchViewModel.swift */; };
-		9007446B92748B6A7EA5AD61 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A89420D9E46727BABE6B39 /* FavoritesView.swift */; };
+		9062138E427E474F14FAAC3B /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED1E30EFF158D23E92A79D /* FavoritesViewModel.swift */; };
 		96FAE2812AE4E78586826173 /* CacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04059F24BC79DBF380A6ADC3 /* CacheService.swift */; };
 		971E7A069733FF4514EBFAB5 /* CardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C130F2A82A19215A787384 /* CardViews.swift */; };
 		9C2B9316B83EB7F43EC17A08 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E9275E07A877983E4518E3 /* ContentView.swift */; };
+		9E9A05173A9F6CEFB2CEA176 /* CloudKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9AD690C8210B1FDD6098F1 /* CloudKitService.swift */; };
 		A21B5D4B4F680D3E81A66EAD /* TVShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119CA5BF0078EB2AC8788099 /* TVShow.swift */; };
-		AD202496164C293A461C937D /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A19E03A70E0F7B9D2D8B64 /* FavoritesViewModel.swift */; };
+		A64ADBB1301D18E389987E1F /* FavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C1333F39D4634F1821CEF7 /* FavoriteButton.swift */; };
 		BA425BA89AE5A294EDF490C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 836DA01B85825B6EEB188120 /* Assets.xcassets */; };
 		BB6D0D9A8D687C144C6EF73C /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EB976087C6FA18E1B326E9 /* Movie.swift */; };
-		C3C700B1FC2F6D96E45A7CDA /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F39FE8B09FD18CF3E130EB4 /* SyncService.swift */; };
 		C7D9BD3EDCB0C729B2AF18A7 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = DC42F25B4841996D3A4E2B30 /* AppIcon.icns */; };
 		CC94B18B5D5316DD9B1EC59C /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B052F4A21F63D3D351D480 /* SearchViewModel.swift */; };
 		CF595446D725B4DBB4430AAA /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB159F3BC0A48D8009F1C08 /* APIConfig.swift */; };
 		D43D5DA239846A626D1625E5 /* OMDbService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7ADE24EBE69ED950E8F4B2 /* OMDbService.swift */; };
+		D81A7D3367DB785A00FFA65B /* FavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C1333F39D4634F1821CEF7 /* FavoriteButton.swift */; };
 		D823771E2026600EC3BE3BDE /* TMDBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC915F7D108F4C19A371929F /* TMDBService.swift */; };
 		DC8F62279855E625B773C0F7 /* TVShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119CA5BF0078EB2AC8788099 /* TVShow.swift */; };
-		E2BBA36FB52DA1EA606E6DF4 /* CloudKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4F604498CB1CACC910887 /* CloudKitService.swift */; };
+		DE03A54CE215B6E098FBDA78 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D63D46EE5B8EB63494B1D8 /* SyncService.swift */; };
 		E3B449B4C4B4740D11714E9D /* WatchNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E20058FE3FA67AA33DF2237 /* WatchNextApp.swift */; };
 		E56648732D09D10EAE7C2323 /* DetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75ADBF38357A49B1F680E55B /* DetailViews.swift */; };
-		E63E23B27B07B81AF52467D7 /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A19E03A70E0F7B9D2D8B64 /* FavoritesViewModel.swift */; };
-		E94A5DF6F580A40ABD2E1BA3 /* FavoriteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD9B2B2C2845A5CDC7EAA81 /* FavoriteItem.swift */; };
-		F0F1DB9C6A429C869A5F41D6 /* FavoriteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD9B2B2C2845A5CDC7EAA81 /* FavoriteItem.swift */; };
+		F50660B4CDD6305A1FB7ECF4 /* CloudKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9AD690C8210B1FDD6098F1 /* CloudKitService.swift */; };
 		FD0EF76FD5FE8ABAD0446759 /* WatchNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E20058FE3FA67AA33DF2237 /* WatchNextApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		04059F24BC79DBF380A6ADC3 /* CacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheService.swift; sourceTree = "<group>"; };
-		0AD9B2B2C2845A5CDC7EAA81 /* FavoriteItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoriteItem.swift; sourceTree = "<group>"; };
 		119CA5BF0078EB2AC8788099 /* TVShow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShow.swift; sourceTree = "<group>"; };
-		16C4F604498CB1CACC910887 /* CloudKitService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CloudKitService.swift; sourceTree = "<group>"; };
-		1F39FE8B09FD18CF3E130EB4 /* SyncService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
+		2999FE15B31525F0264F67F3 /* WatchNext-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "WatchNext-iOS.entitlements"; sourceTree = "<group>"; };
 		36B052F4A21F63D3D351D480 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
-		44085586FEB2501BB8C6AE6B /* FavoriteButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoriteButton.swift; sourceTree = "<group>"; };
+		3FED1E30EFF158D23E92A79D /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
+		452667D6A5EEA1C375A39E65 /* FavoriteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItem.swift; sourceTree = "<group>"; };
+		4D9AD690C8210B1FDD6098F1 /* CloudKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitService.swift; sourceTree = "<group>"; };
 		4E20058FE3FA67AA33DF2237 /* WatchNextApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNextApp.swift; sourceTree = "<group>"; };
 		5B21CFEA655209466EED72B8 /* WatchNext-iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "WatchNext-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		62A19E03A70E0F7B9D2D8B64 /* FavoritesViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
+		70D63D46EE5B8EB63494B1D8 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		7397F4954AC595793552CE01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		73A89420D9E46727BABE6B39 /* FavoritesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		73E9275E07A877983E4518E3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		75ADBF38357A49B1F680E55B /* DetailViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViews.swift; sourceTree = "<group>"; };
-		81C2AD172E4700C3C3EDF273 /* WatchNext-iOS.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = "WatchNext-iOS.entitlements"; path = "WatchNext/WatchNext-iOS.entitlements"; sourceTree = "<group>"; };
 		82D429BAF3BD5B71EFB4B437 /* WatchNext.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchNext.entitlements; sourceTree = "<group>"; };
 		836DA01B85825B6EEB188120 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1C1333F39D4634F1821CEF7 /* FavoriteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteButton.swift; sourceTree = "<group>"; };
 		A4C130F2A82A19215A787384 /* CardViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViews.swift; sourceTree = "<group>"; };
 		B1EB976087C6FA18E1B326E9 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		BC915F7D108F4C19A371929F /* TMDBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBService.swift; sourceTree = "<group>"; };
@@ -80,6 +79,7 @@
 		DC7ADE24EBE69ED950E8F4B2 /* OMDbService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDbService.swift; sourceTree = "<group>"; };
 		F1D5DC48F9F2FB56F9FDB1B5 /* WatchNext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchNext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F977FCF4AAF80EEA91A02BA0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		FCA3249B1D8329E9BD92AE88 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		FDB159F3BC0A48D8009F1C08 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,9 +90,9 @@
 				A4C130F2A82A19215A787384 /* CardViews.swift */,
 				73E9275E07A877983E4518E3 /* ContentView.swift */,
 				75ADBF38357A49B1F680E55B /* DetailViews.swift */,
+				FCA3249B1D8329E9BD92AE88 /* FavoritesView.swift */,
 				D8015261266D7E1E3C4B0BB8 /* SettingsView.swift */,
-				33EA96AC9CEF9B7D43FEAD41 /* Components */,
-				73A89420D9E46727BABE6B39 /* FavoritesView.swift */,
+				E5DA86DF534C4BEDEB5375B8 /* Components */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -101,10 +101,10 @@
 			isa = PBXGroup;
 			children = (
 				04059F24BC79DBF380A6ADC3 /* CacheService.swift */,
+				4D9AD690C8210B1FDD6098F1 /* CloudKitService.swift */,
 				DC7ADE24EBE69ED950E8F4B2 /* OMDbService.swift */,
+				70D63D46EE5B8EB63494B1D8 /* SyncService.swift */,
 				BC915F7D108F4C19A371929F /* TMDBService.swift */,
-				16C4F604498CB1CACC910887 /* CloudKitService.swift */,
-				1F39FE8B09FD18CF3E130EB4 /* SyncService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -126,20 +126,11 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		33EA96AC9CEF9B7D43FEAD41 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				44085586FEB2501BB8C6AE6B /* FavoriteButton.swift */,
-			);
-			name = Components;
-			path = Components;
-			sourceTree = "<group>";
-		};
 		3C315A5FF0DB5BF1D553BD72 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				3FED1E30EFF158D23E92A79D /* FavoritesViewModel.swift */,
 				36B052F4A21F63D3D351D480 /* SearchViewModel.swift */,
-				62A19E03A70E0F7B9D2D8B64 /* FavoritesViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -147,10 +138,10 @@
 		788F383128E1755891190667 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				452667D6A5EEA1C375A39E65 /* FavoriteItem.swift */,
 				B1EB976087C6FA18E1B326E9 /* Movie.swift */,
 				D76427BF9CEF471E4F80AAAF /* Rating.swift */,
 				119CA5BF0078EB2AC8788099 /* TVShow.swift */,
-				0AD9B2B2C2845A5CDC7EAA81 /* FavoriteItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -170,6 +161,7 @@
 				DC42F25B4841996D3A4E2B30 /* AppIcon.icns */,
 				836DA01B85825B6EEB188120 /* Assets.xcassets */,
 				7397F4954AC595793552CE01 /* Info.plist */,
+				2999FE15B31525F0264F67F3 /* WatchNext-iOS.entitlements */,
 				82D429BAF3BD5B71EFB4B437 /* WatchNext.entitlements */,
 				33A2EA408F790111CCF024E3 /* App */,
 				788F383128E1755891190667 /* Models */,
@@ -177,7 +169,6 @@
 				79A14C9316B18ECECC2F4D88 /* Utilities */,
 				3C315A5FF0DB5BF1D553BD72 /* ViewModels */,
 				0813FDA99EB6E10D10CE55C3 /* Views */,
-				81C2AD172E4700C3C3EDF273 /* WatchNext-iOS.entitlements */,
 			);
 			path = WatchNext;
 			sourceTree = "<group>";
@@ -188,6 +179,14 @@
 				CEFB76753BD654955376F81F /* WatchNext */,
 				2C6117155C363B02F54BE403 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		E5DA86DF534C4BEDEB5375B8 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A1C1333F39D4634F1821CEF7 /* FavoriteButton.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,6 +204,8 @@
 			dependencies = (
 			);
 			name = "WatchNext-iOS";
+			packageProductDependencies = (
+			);
 			productName = "WatchNext-iOS";
 			productReference = 5B21CFEA655209466EED72B8 /* WatchNext-iOS.app */;
 			productType = "com.apple.product-type.application";
@@ -221,6 +222,8 @@
 			dependencies = (
 			);
 			name = WatchNext;
+			packageProductDependencies = (
+			);
 			productName = WatchNext;
 			productReference = F1D5DC48F9F2FB56F9FDB1B5 /* WatchNext.app */;
 			productType = "com.apple.product-type.application";
@@ -255,7 +258,6 @@
 			mainGroup = D98CC7C7D44CFD3BC33F121E;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 2C6117155C363B02F54BE403 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -294,23 +296,23 @@
 				3AD32FAA9BD7C0F1398496D4 /* APIConfig.swift in Sources */,
 				5D2E296C506B8D0A0435154D /* CacheService.swift in Sources */,
 				36ACB16101D2E453F39CD091 /* CardViews.swift in Sources */,
+				F50660B4CDD6305A1FB7ECF4 /* CloudKitService.swift in Sources */,
 				237B03566E2D0182D729451A /* Constants.swift in Sources */,
 				9C2B9316B83EB7F43EC17A08 /* ContentView.swift in Sources */,
 				2CF01CA353E72D5C542EEDCF /* DetailViews.swift in Sources */,
+				D81A7D3367DB785A00FFA65B /* FavoriteButton.swift in Sources */,
+				6D6411FF5AC795077AB52353 /* FavoriteItem.swift in Sources */,
+				0DB5FA07CAF465A08B5163C4 /* FavoritesView.swift in Sources */,
+				0B964236F944D1B0DA9D13F7 /* FavoritesViewModel.swift in Sources */,
 				5737E5DF46C712E70BFE7A05 /* Movie.swift in Sources */,
 				7BC154444BB94C0A1170E227 /* OMDbService.swift in Sources */,
 				26D1733243911709152E471B /* Rating.swift in Sources */,
 				88C016560F78C0ED0CA5E25A /* SearchViewModel.swift in Sources */,
 				880DFE2424A37129CFDC2599 /* SettingsView.swift in Sources */,
+				10A4B2AEF2A1166717B6114E /* SyncService.swift in Sources */,
 				D823771E2026600EC3BE3BDE /* TMDBService.swift in Sources */,
 				A21B5D4B4F680D3E81A66EAD /* TVShow.swift in Sources */,
 				E3B449B4C4B4740D11714E9D /* WatchNextApp.swift in Sources */,
-				E94A5DF6F580A40ABD2E1BA3 /* FavoriteItem.swift in Sources */,
-				E63E23B27B07B81AF52467D7 /* FavoritesViewModel.swift in Sources */,
-				9007446B92748B6A7EA5AD61 /* FavoritesView.swift in Sources */,
-				53792B86A1D1AD99B3C906C8 /* FavoriteButton.swift in Sources */,
-				E2BBA36FB52DA1EA606E6DF4 /* CloudKitService.swift in Sources */,
-				C3C700B1FC2F6D96E45A7CDA /* SyncService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,23 +323,23 @@
 				CF595446D725B4DBB4430AAA /* APIConfig.swift in Sources */,
 				96FAE2812AE4E78586826173 /* CacheService.swift in Sources */,
 				971E7A069733FF4514EBFAB5 /* CardViews.swift in Sources */,
+				9E9A05173A9F6CEFB2CEA176 /* CloudKitService.swift in Sources */,
 				53C3ADF0DB3392B12B8955FD /* Constants.swift in Sources */,
 				0EA889D19A87FA853B67E0A8 /* ContentView.swift in Sources */,
 				E56648732D09D10EAE7C2323 /* DetailViews.swift in Sources */,
+				A64ADBB1301D18E389987E1F /* FavoriteButton.swift in Sources */,
+				48F00786AC56060BD21246B5 /* FavoriteItem.swift in Sources */,
+				74D6A6C3B89143F6A5480DC6 /* FavoritesView.swift in Sources */,
+				9062138E427E474F14FAAC3B /* FavoritesViewModel.swift in Sources */,
 				BB6D0D9A8D687C144C6EF73C /* Movie.swift in Sources */,
 				D43D5DA239846A626D1625E5 /* OMDbService.swift in Sources */,
 				59A335E58B852B0C558CE417 /* Rating.swift in Sources */,
 				CC94B18B5D5316DD9B1EC59C /* SearchViewModel.swift in Sources */,
 				6903602348A065591AB236B3 /* SettingsView.swift in Sources */,
+				DE03A54CE215B6E098FBDA78 /* SyncService.swift in Sources */,
 				7D7BB827AC62F3D771A42EB5 /* TMDBService.swift in Sources */,
 				DC8F62279855E625B773C0F7 /* TVShow.swift in Sources */,
 				FD0EF76FD5FE8ABAD0446759 /* WatchNextApp.swift in Sources */,
-				F0F1DB9C6A429C869A5F41D6 /* FavoriteItem.swift in Sources */,
-				83BC5E2C6977514722931936 /* FavoritesView.swift in Sources */,
-				6281B05F406FD78BBC6312CD /* FavoriteButton.swift in Sources */,
-				AD202496164C293A461C937D /* FavoritesViewModel.swift in Sources */,
-				2CF6A0F766C47C387A5AE6EB /* CloudKitService.swift in Sources */,
-				82F2E8461E731EC3ACE65D4C /* SyncService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,9 +351,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "WatchNext/WatchNext-iOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = W89J6VDBML;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = WatchNext/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchNext;
@@ -374,9 +375,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "WatchNext/WatchNext-iOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = W89J6VDBML;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = WatchNext/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchNext;
@@ -399,11 +398,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_ENTITLEMENTS = WatchNext/WatchNext.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = W89J6VDBML;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = WatchNext/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchNext;
@@ -423,10 +421,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = WatchNext/WatchNext.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = W89J6VDBML;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = WatchNext/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchNext;
