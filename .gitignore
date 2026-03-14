@@ -1,3 +1,7 @@
+# Build
+build/
+build-ios/
+
 # Xcode
 *.xcodeproj/project.xcworkspace/
 *.xcodeproj/xcuserdata/
