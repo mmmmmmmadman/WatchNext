@@ -15,7 +15,9 @@ final class FavoritesViewModel {
     func setModelContext(_ context: ModelContext) {
         self.modelContext = context
         loadFavorites()
-        Task {
+        // 延遲 sync，讓 app 有時間完成啟動後再存取 CloudKit
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(2))
             await performSync()
         }
     }

@@ -23,10 +23,15 @@ actor CloudKitService {
         #endif
     }
 
+    // CKContainer 初始化延遲到第一次使用，並用安全檢查包覆
     private var container: CKContainer? {
         guard hasCloudKitEntitlements else { return nil }
 
         if _container == nil {
+            // CKContainer(identifier:) 在缺少 entitlement 時可能 crash，
+            // 先用 default() 測試基本可用性
+            let testContainer = CKContainer.default()
+            guard testContainer.containerIdentifier != nil else { return nil }
             _container = CKContainer(identifier: containerIdentifier)
         }
         return _container
@@ -38,6 +43,8 @@ actor CloudKitService {
 
     private init() {}
 
+    /// CloudKit 是否可用，結果會快取。
+    /// 所有可能失敗的路徑都安全回傳 false，不會 crash。
     var isAvailable: Bool {
         get async {
             if let cached = _isAvailable {
@@ -60,10 +67,17 @@ actor CloudKitService {
                 _isAvailable = available
                 return available
             } catch {
+                // accountStatus() 失敗時安全回傳 false，不丟 error
+                print("[CloudKitService] accountStatus check failed: \(error.localizedDescription)")
                 _isAvailable = false
                 return false
             }
         }
+    }
+
+    /// 重設快取，下次存取時重新檢查可用性
+    func resetAvailabilityCache() {
+        _isAvailable = nil
     }
 
     // MARK: - CRUD Operations

@@ -2,7 +2,10 @@ import Foundation
 import SwiftData
 import CloudKit
 
-actor SyncService {
+/// SyncService 以 @MainActor class 運作，因為主要操作都需要 ModelContext（MainActor bound）。
+/// CloudKit 操作透過 await 自動切到 CloudKitService actor。
+@MainActor
+final class SyncService {
     static let shared = SyncService()
 
     private let cloudKitService = CloudKitService.shared
@@ -15,9 +18,8 @@ actor SyncService {
     func performSync(modelContext: ModelContext) async throws {
         guard !isSyncing else { return }
 
-        // Check if CloudKit is available before attempting sync
+        // CloudKit 可用性檢查（自動切到 CloudKitService actor）
         guard await cloudKitService.isAvailable else {
-            // CloudKit not available, skip sync silently
             return
         }
 
@@ -37,9 +39,7 @@ actor SyncService {
     func performInitialSync(modelContext: ModelContext) async throws {
         guard !isSyncing else { return }
 
-        // Check if CloudKit is available before attempting sync
         guard await cloudKitService.isAvailable else {
-            // CloudKit not available, skip sync silently
             return
         }
 
@@ -51,7 +51,7 @@ actor SyncService {
             throw SyncError.notAuthenticated
         }
 
-        try await markLocalItemsForUpload(modelContext: modelContext)
+        markLocalItemsForUpload(modelContext: modelContext)
         try await uploadPendingItems(modelContext: modelContext)
         try await downloadAndMerge(modelContext: modelContext)
     }
@@ -76,18 +76,15 @@ actor SyncService {
                     record = try await cloudKitService.save(item)
                 }
 
-                await MainActor.run {
-                    item.cloudRecordId = record.recordID.recordName
-                    item.syncStatus = .synced
-                }
+                // 已在 MainActor 上，直接修改
+                item.cloudRecordId = record.recordID.recordName
+                item.syncStatus = .synced
             } catch {
                 print("Failed to upload item \(item.id): \(error)")
             }
         }
 
-        try await MainActor.run {
-            try modelContext.save()
-        }
+        try modelContext.save()
     }
 
     // MARK: - Delete
@@ -109,14 +106,11 @@ actor SyncService {
                 }
             }
 
-            await MainActor.run {
-                modelContext.delete(item)
-            }
+            // 已在 MainActor 上，直接刪除
+            modelContext.delete(item)
         }
 
-        try await MainActor.run {
-            try modelContext.save()
-        }
+        try modelContext.save()
     }
 
     // MARK: - Download and Merge
@@ -138,45 +132,38 @@ actor SyncService {
 
             if let localItem = localByTmdbId[key] {
                 if cloudItem.lastModified > localItem.lastModified {
-                    await MainActor.run {
-                        localItem.title = cloudItem.title
-                        localItem.posterPath = cloudItem.posterPath
-                        localItem.releaseYear = cloudItem.releaseYear
-                        localItem.lastModified = cloudItem.lastModified
-                        localItem.cloudRecordId = cloudItem.cloudRecordId
-                        localItem.syncStatus = .synced
-                    }
+                    // 已在 MainActor 上，直接修改
+                    localItem.title = cloudItem.title
+                    localItem.posterPath = cloudItem.posterPath
+                    localItem.releaseYear = cloudItem.releaseYear
+                    localItem.lastModified = cloudItem.lastModified
+                    localItem.cloudRecordId = cloudItem.cloudRecordId
+                    localItem.syncStatus = .synced
                 }
             } else {
-                await MainActor.run {
-                    modelContext.insert(cloudItem)
-                }
+                modelContext.insert(cloudItem)
             }
         }
 
-        try await MainActor.run {
-            try modelContext.save()
-        }
+        try modelContext.save()
     }
 
     // MARK: - Helpers
 
-    private func markLocalItemsForUpload(modelContext: ModelContext) async throws {
+    private func markLocalItemsForUpload(modelContext: ModelContext) {
         let local = SyncStatus.local.rawValue
         let descriptor = FetchDescriptor<FavoriteItem>(
             predicate: #Predicate { $0.syncStatusRaw == local }
         )
 
-        let items = try modelContext.fetch(descriptor)
-
-        for item in items {
-            await MainActor.run {
+        do {
+            let items = try modelContext.fetch(descriptor)
+            for item in items {
                 item.syncStatus = .pendingUpload
             }
-        }
-
-        try await MainActor.run {
             try modelContext.save()
+        } catch {
+            print("Failed to mark local items for upload: \(error)")
         }
     }
 
@@ -184,7 +171,6 @@ actor SyncService {
 
     func deleteAllCloudData() async throws {
         guard await cloudKitService.isAvailable else {
-            // CloudKit not available, nothing to delete
             return
         }
         try await cloudKitService.deleteAll()
