@@ -25,8 +25,33 @@ class SearchViewModel {
     var movieGenres: [Genre] = []
     var tvGenres: [Genre] = []
 
+    /// 各 provider 支援的地區，啟動時載入一次
+    var providerRegions: [Int: Set<String>] = [:]
+
     var currentGenres: [Genre] {
         selectedContentType == .movies ? movieGenres : tvGenres
+    }
+
+    /// 根據當前平台過濾可用地區（取平台所有 provider ID 的聯集）
+    func availableRegions(for platformId: String) -> [(code: String, name: String)] {
+        guard let platform = Constants.TMDB.StreamingPlatform.find(by: platformId) else {
+            return Constants.TMDB.Region.availableRegions
+        }
+
+        // 如果 providerRegions 尚未載入，顯示全部地區
+        guard !providerRegions.isEmpty else {
+            return Constants.TMDB.Region.availableRegions
+        }
+
+        // 取該平台所有 provider ID 支援地區的聯集
+        var supportedCodes = Set<String>()
+        for providerId in platform.providerIds {
+            if let regions = providerRegions[providerId] {
+                supportedCodes.formUnion(regions)
+            }
+        }
+
+        return Constants.TMDB.Region.availableRegions.filter { supportedCodes.contains($0.code) }
     }
 
     private let tmdbService = TMDBService()
@@ -46,9 +71,15 @@ class SearchViewModel {
         do {
             async let movieGenresTask = tmdbService.getMovieGenres()
             async let tvGenresTask = tmdbService.getTVGenres()
+            async let providerRegionsTask = tmdbService.fetchProviderRegions()
 
             var fetchedMovieGenres = try await movieGenresTask
             var fetchedTVGenres = try await tvGenresTask
+
+            // Provider 地區資料載入失敗不阻擋整體流程
+            if let fetchedProviderRegions = try? await providerRegionsTask {
+                providerRegions = fetchedProviderRegions
+            }
 
             // Add Favorites at the beginning
             fetchedMovieGenres.insert(SearchViewModel.favoritesGenre, at: 0)

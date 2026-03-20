@@ -1,6 +1,6 @@
 WatchNext helps you discover movies and TV shows across multiple streaming platforms in one place.
 
-Stop switching between apps to find what to watch. WatchNext lets you browse content available on Apple TV, Netflix, Prime Video, and Disney+ with powerful filtering options.
+Stop switching between apps to find what to watch. WatchNext lets you browse content available on Apple TV, Netflix, Prime Video, Disney+, and YouTube with powerful filtering options.
 
 FEATURES
 
@@ -21,3 +21,5 @@ HOW IT WORKS
 WatchNext uses the TMDB API for movie and TV data. Optional OMDb integration adds IMDb and Rotten Tomatoes ratings.
 
 Note: API keys required for full functionality. Free keys available from TMDB and OMDb.
+
+Platform availability varies by region. Not all streaming platforms are supported in every country.

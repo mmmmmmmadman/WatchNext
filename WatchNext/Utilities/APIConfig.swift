@@ -70,4 +70,18 @@ enum APIConfig {
     static func setPlatform(_ id: String) {
         UserDefaults.standard.set(id, forKey: "SELECTED_PLATFORM")
     }
+
+    // MARK: - 最近使用的地區
+
+    static var recentRegions: [String] {
+        UserDefaults.standard.stringArray(forKey: "RECENT_REGIONS") ?? []
+    }
+
+    static func addRecentRegion(_ code: String) {
+        var recent = recentRegions
+        recent.removeAll { $0 == code }
+        recent.insert(code, at: 0)
+        if recent.count > 5 { recent = Array(recent.prefix(5)) }
+        UserDefaults.standard.set(recent, forKey: "RECENT_REGIONS")
+    }
 }

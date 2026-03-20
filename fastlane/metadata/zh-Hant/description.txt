@@ -1,6 +1,6 @@
 WatchNext 幫助您在一個地方探索多個串流平台上的電影和電視節目。
 
-不再需要在不同 App 之間切換來尋找想看的內容。WatchNext 讓您瀏覽 Apple TV、Netflix、Prime Video 和 Disney+ 上的內容，並提供強大的篩選功能。
+不再需要在不同 App 之間切換來尋找想看的內容。WatchNext 讓您瀏覽 Apple TV、Netflix、Prime Video、Disney+ 和 YouTube 上的內容，並提供強大的篩選功能。
 
 功能特色
 
@@ -21,3 +21,5 @@ WatchNext 幫助您在一個地方探索多個串流平台上的電影和電視�
 WatchNext 使用 TMDB API 取得電影和電視資料。選擇性整合 OMDb 可加入 IMDb 和 Rotten Tomatoes 評分。
 
 注意：需要 API 金鑰才能使用完整功能。可從 TMDB 和 OMDb 免費取得金鑰。
+
+各平台的支援範圍因地區而異，並非所有串流平台都對應全部國家。

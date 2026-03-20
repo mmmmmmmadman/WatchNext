@@ -60,12 +60,22 @@ struct ContentView: View {
             }
             .onChange(of: selectedPlatform) {
                 APIConfig.setPlatform(selectedPlatform)
+                // 切換平台後，檢查當前地區是否仍被支援
+                let available = viewModel.availableRegions(for: selectedPlatform)
+                if !available.contains(where: { $0.code == selectedRegion }) {
+                    // 自動切到第一個可用地區
+                    if let first = available.first {
+                        selectedRegion = first.code
+                        APIConfig.setRegion(first.code)
+                    }
+                }
                 Task {
                     await viewModel.discover()
                 }
             }
             .onChange(of: selectedRegion) {
                 APIConfig.setRegion(selectedRegion)
+                APIConfig.addRecentRegion(selectedRegion)
                 Task {
                     await viewModel.discover()
                 }
@@ -148,7 +158,23 @@ struct SearchResultsView: View {
 
                     // Region
                     Menu {
-                        ForEach(Constants.TMDB.Region.availableRegions, id: \.code) { region in
+                        // 最近使用的地區
+                        let available = viewModel.availableRegions(for: selectedPlatform)
+                        let recentCodes = APIConfig.recentRegions.filter { code in
+                            available.contains { $0.code == code }
+                        }
+                        if !recentCodes.isEmpty {
+                            ForEach(recentCodes, id: \.self) { code in
+                                if let region = available.first(where: { $0.code == code }) {
+                                    Button("\(region.name) (\(region.code))") {
+                                        selectedRegion = region.code
+                                    }
+                                }
+                            }
+                            Divider()
+                        }
+                        // 全部可用地區
+                        ForEach(available, id: \.code) { region in
                             Button(region.name) {
                                 selectedRegion = region.code
                             }
@@ -162,6 +188,7 @@ struct SearchResultsView: View {
                         }
                         .foregroundStyle(.primary)
                     }
+                    .menuOrder(.fixed)
 
                     Spacer()
 
@@ -265,13 +292,34 @@ struct SearchResultsView: View {
                 .frame(width: 100)
 
                 // Region
-                Picker("", selection: $selectedRegion) {
-                    ForEach(Constants.TMDB.Region.availableRegions, id: \.code) { region in
-                        Text(region.name).tag(region.code)
+                Menu {
+                    let available = viewModel.availableRegions(for: selectedPlatform)
+                    let recentCodes = APIConfig.recentRegions.filter { code in
+                        available.contains { $0.code == code }
+                    }
+                    if !recentCodes.isEmpty {
+                        ForEach(recentCodes, id: \.self) { code in
+                            if let region = available.first(where: { $0.code == code }) {
+                                Button("\(region.name) (\(region.code))") {
+                                    selectedRegion = region.code
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                    ForEach(available, id: \.code) { region in
+                        Button(region.name) {
+                            selectedRegion = region.code
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(Constants.TMDB.Region.availableRegions.first { $0.code == selectedRegion }?.name ?? selectedRegion)
+                            .frame(width: 80, alignment: .leading)
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.caption2)
                     }
                 }
-                .labelsHidden()
-                .frame(width: 90)
 
                 Divider()
                     .frame(height: 20)

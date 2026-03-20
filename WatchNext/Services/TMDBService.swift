@@ -300,6 +300,45 @@ actor TMDBService {
         return !platform.providerIds.filter { availableIds.contains($0) }.isEmpty
     }
 
+    // MARK: - Provider Regions
+
+    struct WatchProviderListResponse: Codable {
+        let results: [WatchProviderDetail]
+    }
+
+    struct WatchProviderDetail: Codable {
+        let providerId: Int
+        let providerName: String
+        let displayPriorities: [String: Int]
+
+        enum CodingKeys: String, CodingKey {
+            case providerId = "provider_id"
+            case providerName = "provider_name"
+            case displayPriorities = "display_priorities"
+        }
+    }
+
+    /// 查詢所有 provider 支援的地區，回傳 [providerId: Set<regionCode>]
+    func fetchProviderRegions() async throws -> [Int: Set<String>] {
+        var components = URLComponents(string: "\(baseURL)/watch/providers/movie")!
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+        ]
+
+        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw TMDBError.invalidResponse
+        }
+
+        let listResponse = try JSONDecoder().decode(WatchProviderListResponse.self, from: data)
+
+        var result: [Int: Set<String>] = [:]
+        for provider in listResponse.results {
+            result[provider.providerId] = Set(provider.displayPriorities.keys)
+        }
+        return result
+    }
+
     // MARK: - Recommendations
 
     func getMovieRecommendations(movieId: Int, page: Int = 1) async throws -> DiscoverResponse<Movie> {
