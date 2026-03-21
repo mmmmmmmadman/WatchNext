@@ -1,12 +1,12 @@
 WatchNext 幫助您在一個地方探索多個串流平台上的電影和電視節目。
 
-不再需要在不同 App 之間切換來尋找想看的內容。WatchNext 讓您瀏覽 Apple TV、Netflix、Prime Video、Disney+ 和 YouTube 上的內容，並提供強大的篩選功能。
+不再需要在不同 App 之間切換來尋找想看的內容。WatchNext 讓您瀏覽 Apple TV、Netflix、Prime Video 和 Disney+ 上的內容，並提供強大的篩選功能。
 
 功能特色
 
 - 依平台瀏覽：查看您喜愛的串流服務上有哪些內容
-- 多重評分：同時查看 TMDB、IMDb 和 Rotten Tomatoes 評分
-- 智慧篩選：依類型篩選，依熱門度或評分排序
+- 多重評分：顯示 TMDB 評分，選擇性加入 IMDb 和 Rotten Tomatoes 評分
+- 智慧篩選：依類型篩選，依標題、上映日期或評分排序
 - 區域支援：尋找您所在國家可觀看的內容
 - 簡潔介面：專注於探索的極簡設計
 

@@ -1,12 +1,6 @@
-What's New in Version 1.4.8:
+What's New in Version 1.5.1:
 
-- Expanded Region Support: Now supports 120+ countries and regions worldwide, including Netherlands, Belgium, Switzerland, and many more European, Asian, African, and South American countries
-
-What's New in Version 1.4.5:
-
-- Add to Favorites: Tap the star on any poster to save your favorite movies and TV shows
-- iCloud Sync: Your favorites automatically sync across all your devices
-- Favorites Genre: Discover new content based on your favorites with personalized recommendations
-- iOS Support: Now available on iPhone and iPad with full feature parity
-
-Note: This app requires your own TMDB API key to function. A step-by-step API setup guide is included in Settings to help you obtain your free API key.
+- Smart Region Filtering: Available regions are now filtered per platform, showing only supported countries
+- Recent Regions: Your 5 most recently used regions appear at the top for quick access
+- Simplified Sorting: Streamlined sort options to title, release date, and TMDB rating
+- Bug Fix: Resolved a crash on iPad during app launch

@@ -24,7 +24,6 @@ enum Constants {
                 StreamingPlatform(id: "netflix", name: "Netflix", providerIds: [8]),
                 StreamingPlatform(id: "prime", name: "Prime Video", providerIds: [9, 119]),
                 StreamingPlatform(id: "disney", name: "Disney+", providerIds: [337]),
-                StreamingPlatform(id: "youtube", name: "YouTube", providerIds: [192, 188, 235]),
             ]
 
             static func find(by id: String) -> StreamingPlatform? {
@@ -46,8 +45,6 @@ enum Constants {
                     urlString = "https://www.google.com/search?q=\(encoded)+site:primevideo.com"
                 case "disney":
                     urlString = "https://www.google.com/search?q=\(encoded)+site:disneyplus.com"
-                case "youtube":
-                    urlString = "https://www.youtube.com/results?search_query=\(encoded)+rent"
                 default:
                     return nil
                 }
@@ -236,12 +233,6 @@ enum SortOption: String, CaseIterable, Identifiable {
     case releaseDateDesc = "release_date.desc"
     case tmdbRatingDesc = "vote_average.desc"
     case tmdbRatingAsc = "vote_average.asc"
-    case imdbRatingDesc = "imdb.desc"
-    case imdbRatingAsc = "imdb.asc"
-    case rtRatingDesc = "rt.desc"
-    case rtRatingAsc = "rt.asc"
-    case popularityAsc = "popularity.asc"
-    case popularityDesc = "popularity.desc"
 
     var id: String { rawValue }
 
@@ -253,31 +244,15 @@ enum SortOption: String, CaseIterable, Identifiable {
         case .releaseDateDesc: return "Newest First"
         case .tmdbRatingDesc: return "TMDB (High-Low)"
         case .tmdbRatingAsc: return "TMDB (Low-High)"
-        case .imdbRatingDesc: return "IMDb (High-Low)"
-        case .imdbRatingAsc: return "IMDb (Low-High)"
-        case .rtRatingDesc: return "RT (High-Low)"
-        case .rtRatingAsc: return "RT (Low-High)"
-        case .popularityAsc: return "Least Popular"
-        case .popularityDesc: return "Most Popular"
         }
     }
 
     var isLocalSort: Bool {
-        switch self {
-        case .imdbRatingDesc, .imdbRatingAsc, .rtRatingDesc, .rtRatingAsc:
-            return true
-        default:
-            return false
-        }
+        return false
     }
 
     var apiSortValue: String {
-        switch self {
-        case .imdbRatingDesc, .imdbRatingAsc, .rtRatingDesc, .rtRatingAsc:
-            return "popularity.desc"
-        default:
-            return rawValue
-        }
+        return rawValue
     }
 }
 

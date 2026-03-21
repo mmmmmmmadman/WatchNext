@@ -17,7 +17,7 @@ class SearchViewModel {
 
     var selectedContentType: ContentType = .movies
     var selectedGenre: Genre?
-    var selectedSortOption: SortOption = .popularityDesc
+    var selectedSortOption: SortOption = .tmdbRatingDesc
     var minYear: Int?
     var maxYear: Int?
     var minRating: Double?
@@ -276,7 +276,7 @@ class SearchViewModel {
             case .movies:
                 let response = try await tmdbService.discoverMovies(
                     page: 1,
-                    sortBy: .popularityDesc,
+                    sortBy: .tmdbRatingDesc,
                     region: APIConfig.selectedRegion
                 )
                 movies = response.results
@@ -285,7 +285,7 @@ class SearchViewModel {
             case .tvShows:
                 let response = try await tmdbService.discoverTVShows(
                     page: 1,
-                    sortBy: .popularityDesc,
+                    sortBy: .tmdbRatingDesc,
                     region: APIConfig.selectedRegion
                 )
                 tvShows = response.results
@@ -380,45 +380,14 @@ class SearchViewModel {
 
     func resetFilters() {
         selectedGenre = nil
-        selectedSortOption = .popularityDesc
+        selectedSortOption = .tmdbRatingDesc
         minYear = nil
         maxYear = nil
         minRating = nil
     }
 
     func sortLocally() {
-        switch selectedSortOption {
-        case .imdbRatingDesc:
-            movies.sort { ($0.imdbRating ?? 0) > ($1.imdbRating ?? 0) }
-            tvShows.sort { ($0.imdbRating ?? 0) > ($1.imdbRating ?? 0) }
-        case .imdbRatingAsc:
-            movies.sort {
-                guard let r1 = $0.imdbRating else { return false }
-                guard let r2 = $1.imdbRating else { return true }
-                return r1 < r2
-            }
-            tvShows.sort {
-                guard let r1 = $0.imdbRating else { return false }
-                guard let r2 = $1.imdbRating else { return true }
-                return r1 < r2
-            }
-        case .rtRatingDesc:
-            movies.sort { ($0.rottenTomatoesRating ?? 0) > ($1.rottenTomatoesRating ?? 0) }
-            tvShows.sort { ($0.rottenTomatoesRating ?? 0) > ($1.rottenTomatoesRating ?? 0) }
-        case .rtRatingAsc:
-            movies.sort {
-                guard let r1 = $0.rottenTomatoesRating else { return false }
-                guard let r2 = $1.rottenTomatoesRating else { return true }
-                return r1 < r2
-            }
-            tvShows.sort {
-                guard let r1 = $0.rottenTomatoesRating else { return false }
-                guard let r2 = $1.rottenTomatoesRating else { return true }
-                return r1 < r2
-            }
-        default:
-            break
-        }
+        // 所有排序都透過 API 完成，不需要本地排序
     }
 
     func getWatchLink(for movie: Movie) async -> URL? {

@@ -1,12 +1,12 @@
 WatchNext helps you discover movies and TV shows across multiple streaming platforms in one place.
 
-Stop switching between apps to find what to watch. WatchNext lets you browse content available on Apple TV, Netflix, Prime Video, Disney+, and YouTube with powerful filtering options.
+Stop switching between apps to find what to watch. WatchNext lets you browse content available on Apple TV, Netflix, Prime Video, and Disney+ with powerful filtering options.
 
 FEATURES
 
 - Browse by Platform: See what's available on your favorite streaming services
-- Multiple Ratings: View TMDB, IMDb, and Rotten Tomatoes scores side by side
-- Smart Filtering: Filter by genre, sort by popularity or rating
+- Multiple Ratings: View TMDB ratings, with optional IMDb and Rotten Tomatoes scores
+- Smart Filtering: Filter by genre, sort by title, release date, or rating
 - Region Support: Find content available in your country
 - Clean Interface: Minimalist design focused on discovery
 
