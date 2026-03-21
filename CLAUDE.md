@@ -33,9 +33,9 @@ macOS 原生應用程式，搜尋多個串流平台的電影和電視節目。�
 
 1. 串接 TMDB API 的 Watch Providers 接口，檢索各串流平台內容
 2. 整合 OMDb API 獲取 IMDb 與 Rotten Tomatoes 評分
-3. 多維度排序：TMDB、IMDb、RT 評分
+3. 排序：Title、Release Date、TMDB Rating
 4. Genre 過濾
-5. 區域選擇
+5. 區域選擇（依平台自動過濾可用地區，最近使用地區置頂）
 
 ## API 金鑰配置
 
@@ -86,3 +86,26 @@ xcodebuild -scheme WatchNext -configuration Debug build
 - Netflix: https://www.netflix.com/search?q={title}
 - Prime Video: https://www.primevideo.com/search?phrase={title}
 - Disney+: https://www.disneyplus.com/search?q={title}
+
+### CloudKit / iCloud Sync 閃退問題（v1.5.1 修復）
+
+**根因**：iOS provisioning profile 沒有包含 CloudKit entitlement。即使 WatchNext-iOS.entitlements 檔案中有設定 CloudKit，build 出來的 app binary 實際上不包含 CloudKit entitlement。當 app 嘗試初始化 CKContainer 時，CloudKit framework 拋出無法攔截的 exception（iOS 上是 EXC_BREAKPOINT，macOS 上是 ObjC NSException），導致 crash。
+
+**觸發路徑**：
+1. ContentView.task → favoritesViewModel.setModelContext() → performSync() → CloudKitService.isAvailable → CKContainer 初始化 → crash
+2. SettingsView.task → checkiCloudStatus() → CloudKitService.checkAccountStatus() → CKContainer 初始化 → crash
+
+**解決方案**：暫時停用所有自動觸發的 CloudKit 操作：
+- FavoritesViewModel.setModelContext() 中移除自動 sync
+- FavoritesViewModel.saveAndReload() 中移除自動 sync
+- SettingsView.checkiCloudStatus() 中不觸碰 CKContainer，直接顯示 "Not available"
+
+**注意事項**：
+- ObjC @try/@catch 無法攔截 iOS 上的 EXC_BREAKPOINT crash
+- FileManager.default.ubiquityIdentityToken 檢查不可靠：使用者已登入 iCloud 時會回傳 non-nil，但 app 不一定有 CloudKit entitlement
+- xcodegen 每次執行會清空 WatchNext.entitlements，需手動復原
+- 要正確啟用 CloudKit，需在 Apple Developer Portal 為 app ID 啟用 iCloud/CloudKit capability，並重新產生 provisioning profile
+
+### xcodegen 注意事項
+
+xcodegen 每次執行都會覆蓋 WatchNext/WatchNext.entitlements 為空的 dict。執行 xcodegen 後必須手動還原 entitlements 內容（sandbox、network.client、CloudKit）。

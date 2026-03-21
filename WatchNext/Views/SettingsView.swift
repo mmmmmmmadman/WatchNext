@@ -1,4 +1,5 @@
 import SwiftUI
+import CloudKit
 
 // MARK: - Localization
 
@@ -534,36 +535,9 @@ struct SettingsView: View {
     }
 
     private func checkiCloudStatus() async {
-        do {
-            let status = try await CloudKitService.shared.checkAccountStatus()
-            await MainActor.run {
-                switch status {
-                case .available:
-                    iCloudStatus = "Connected"
-                    iCloudAvailable = true
-                case .noAccount:
-                    iCloudStatus = "No iCloud account"
-                    iCloudAvailable = false
-                case .restricted:
-                    iCloudStatus = "Restricted"
-                    iCloudAvailable = false
-                case .couldNotDetermine:
-                    iCloudStatus = "Unknown"
-                    iCloudAvailable = false
-                case .temporarilyUnavailable:
-                    iCloudStatus = "Temporarily unavailable"
-                    iCloudAvailable = false
-                @unknown default:
-                    iCloudStatus = "Unknown"
-                    iCloudAvailable = false
-                }
-            }
-        } catch {
-            await MainActor.run {
-                iCloudStatus = "Error checking status"
-                iCloudAvailable = false
-            }
-        }
+        // 暫時停用 CloudKit 檢查，避免 crash
+        iCloudStatus = "Not available"
+        iCloudAvailable = false
     }
 }
 

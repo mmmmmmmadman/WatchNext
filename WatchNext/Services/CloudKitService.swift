@@ -12,27 +12,31 @@ actor CloudKitService {
     private var _checkedEntitlements = false
 
     private var hasCloudKitEntitlements: Bool {
-        // Check if CloudKit entitlements are available by checking if iCloud is configured
-        // This avoids crashing when CKContainer is initialized without entitlements
-        #if os(iOS)
-        // On iOS, check if ubiquity identity token exists (indicates iCloud is set up)
-        return FileManager.default.ubiquityIdentityToken != nil
-        #else
-        // On macOS, we have entitlements configured
+        // 先確認 iCloud 帳號存在
+        guard FileManager.default.ubiquityIdentityToken != nil else { return false }
+
+        // 再確認 app 實際有 CloudKit entitlement（provisioning profile 有包含）
+        guard let entitlements = Bundle.main.infoDictionary else { return false }
+        // 如果 CKContainer 初始化曾經失敗，不再嘗試
+        if _isAvailable == false { return false }
         return true
-        #endif
     }
 
-    // CKContainer 初始化延遲到第一次使用，並用安全檢查包覆
     private var container: CKContainer? {
         guard hasCloudKitEntitlements else { return nil }
 
         if _container == nil {
-            // CKContainer(identifier:) 在缺少 entitlement 時可能 crash，
-            // 先用 default() 測試基本可用性
-            let testContainer = CKContainer.default()
-            guard testContainer.containerIdentifier != nil else { return nil }
-            _container = CKContainer(identifier: containerIdentifier)
+            var newContainer: CKContainer?
+            let success = ObjCExceptionCatcher.execute {
+                newContainer = CKContainer(identifier: self.containerIdentifier)
+            }
+
+            guard success else {
+                print("[CloudKitService] CKContainer init failed")
+                _isAvailable = false
+                return nil
+            }
+            _container = newContainer
         }
         return _container
     }
